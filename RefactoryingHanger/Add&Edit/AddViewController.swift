@@ -184,15 +184,17 @@ extension AddViewController {
         case (.name, .editName(let name)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: name, placeholder: "name")
         case (.category, .editCategory(let category)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: category, placeholder: "category")
+            cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .category)
+            cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.brand, .editBrand(let brand)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: brand, placeholder: "brand")
+            cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.color, .editColor(let color)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: color, placeholder: "color")
         case (.price, .editPrice(let price)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: String(price ?? 0), placeholder: "price")
         case (.orderDate, .editOrderDate(let date)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: date.formatted(date: .numeric, time: .omitted), placeholder: "orderDate")
+            cell.contentConfiguration = datePickerConfiguration(for: cell, with: date)
         default:
             fatalError("error (section, row)")
         }

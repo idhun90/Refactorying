@@ -19,9 +19,22 @@ extension AddViewController {
         return contentConfiguration
     }
     
+    func editListConfiguration(for cell: UICollectionViewListCell, with value: String, at row: Row) -> UIListContentConfiguration {
+        var contentConfiguration = UIListContentConfiguration.valueCell()
+        contentConfiguration.text = text(for: row)
+        contentConfiguration.secondaryText = value
+        return contentConfiguration
+    }
+    
     func headerConfiguration(for cell: UICollectionViewListCell, with title: String) -> UIListContentConfiguration {
         var contentConfiguration = cell.defaultContentConfiguration()
         contentConfiguration.text = title
+        return contentConfiguration
+    }
+    
+    func datePickerConfiguration(for cell: UICollectionViewListCell, with Date: Date) -> DatePickerContentView.Configuration {
+        var contentConfiguration = cell.DatePickerContentConfiguration()
+        contentConfiguration.date = Date
         return contentConfiguration
     }
     

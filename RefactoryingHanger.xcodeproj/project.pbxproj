@@ -21,6 +21,7 @@
 		1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */; };
 		1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */; };
 		1429F8B7298CEF88006428A0 /* UIContentConfiguration+Stateless.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */; };
+		1429F8B9298D684E006428A0 /* DatePickerVContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+CommonSubView.swift"; sourceTree = "<group>"; };
 		1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldContentView.swift; sourceTree = "<group>"; };
 		1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIContentConfiguration+Stateless.swift"; sourceTree = "<group>"; };
+		1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerVContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 			children = (
 				1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */,
 				1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */,
+				1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */,
 				1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */,
 			);
 			path = ContentView;
@@ -189,6 +192,7 @@
 				1429F8B7298CEF88006428A0 /* UIContentConfiguration+Stateless.swift in Sources */,
 				1429F8A9298BB891006428A0 /* Item.swift in Sources */,
 				1429F8AF298CE4B2006428A0 /* AddViewController + CellConfiguration.swift in Sources */,
+				1429F8B9298D684E006428A0 /* DatePickerVContentView.swift in Sources */,
 				1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */,
 				1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */,
 				1429F896298BB6CA006428A0 /* ViewController.swift in Sources */,
