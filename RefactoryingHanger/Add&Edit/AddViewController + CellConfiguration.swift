@@ -53,6 +53,7 @@ extension AddViewController {
         case .name: return item.name
         case .category: return item.category
         case .brand: return item.brand
+        case .size: return item.size ?? "-"
         case .color: return item.color ?? "-"
         case .price: return String(item.price ?? 0)
         case .orderDate: return item.orderDate.formatted(date: .numeric, time: .omitted)
@@ -66,6 +67,7 @@ extension AddViewController {
         case .name: return Row.name.name
         case .category: return Row.category.name
         case .brand: return Row.brand.name
+        case .size: return Row.size.name
         case .color: return Row.color.name
         case .price: return Row.price.name
         case .orderDate: return Row.orderDate.name

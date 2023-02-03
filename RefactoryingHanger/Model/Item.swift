@@ -14,6 +14,7 @@ struct Item: Equatable, Identifiable {
     var name: String
     var category: String
     var brand: String
+    var size: String? // when choice accessories category, no have size
     var color: String? = nil
     var price: Double? = nil
     var orderDate: Date
@@ -31,9 +32,9 @@ extension Array where Element == Item { // 요소가 Item일 때의 조건 적�
 
 extension Item {
     static var sampleData = [
-        Item(name: "tee", category: "Top", brand: "apple", orderDate: Date.now),
-        Item(name: "bottom", category: "Bottom", brand: "google", orderDate: Date.now),
-        Item(name: "outer", category: "Outer", brand: "smasung", orderDate: Date.now, isComplete: true),
-        Item(name: "coat", category: "Outer", brand: "lg", orderDate: Date.now)
+        Item(name: "tee", category: "Top", brand: "apple", size: "S", orderDate: Date.now),
+        Item(name: "bottom", category: "Bottom", brand: "google", size: "M", orderDate: Date.now),
+        Item(name: "outer", category: "Outer", brand: "smasung", size: "M", orderDate: Date.now, isComplete: true),
+        Item(name: "coat", category: "Outer", brand: "lg", size: "L", orderDate: Date.now)
     ]
 }

@@ -8,23 +8,25 @@
 import UIKit
 
 enum Section: Int, Hashable {
-    /// 디테일 화면 일 때
+    /// viewing Mode
     case main
-    /// 편집 모드일 때
+    /// editing Mode
     case name
     case category
     case brand
+    case size
     case color
     case price
     case orderDate
     
-    ///편집 모드일 때 헤더 타이틀 사용 목적
+    ///편집 모드일 때 헤더 타이틀 사용 목적(editing Mode section title)
     var name: String {
         switch self {
         case .main: return ""
         case .name: return NSLocalizedString("name", comment: "name section name")
         case .category: return NSLocalizedString("category", comment: "category section name")
         case .brand: return NSLocalizedString("brand", comment: "brand section name")
+        case .size: return NSLocalizedString("size", comment: "size section name")
         case .color: return NSLocalizedString("color", comment: "color section name")
         case .price: return NSLocalizedString("price", comment: "price section name")
         case .orderDate: return NSLocalizedString("orderDate", comment: "orderDate section name")
@@ -37,6 +39,7 @@ enum Row: Hashable {
     case name
     case category
     case brand
+    case size
     case color
     case price
     case orderDate
@@ -49,6 +52,7 @@ enum Row: Hashable {
     case editName(String)
     case editCategory(String)
     case editBrand(String)
+    case editSize(String?)
     case editColor(String?)
     case editPrice(Double?)
     case editOrderDate(Date)
@@ -58,6 +62,7 @@ enum Row: Hashable {
         case .name: return "Name"
         case .category: return "Category"
         case .brand: return "Brand"
+        case .size: return "Size"
         case .color: return "Color"
         case .price: return "Price"
         case .orderDate: return "OrderDate"
@@ -150,7 +155,7 @@ extension AddViewController {
     private func updateSnapshotForViewing() {
         snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems([Row.header(""), Row.name, Row.category, Row.brand, Row.color, Row.price, Row.orderDate], toSection: .main)
+        snapshot.appendItems([Row.header(""), Row.name, Row.category, Row.brand, Row.size, Row.color, Row.price, Row.orderDate], toSection: .main)
         dataSource.apply(snapshot)
     }
     
@@ -189,6 +194,9 @@ extension AddViewController {
         case (.brand, .editBrand(let brand)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .brand)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
+        case (.size, .editSize(let size)):
+            cell.contentConfiguration = editListConfiguration(for: cell, with: size ?? "-", at: .size)
+            cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.color, .editColor(let color)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: color, placeholder: "color")
         case (.price, .editPrice(let price)):
@@ -207,7 +215,7 @@ extension AddViewController {
     private func updateSnapshotForEditing() {
         //print(#function)
         var snapshot = Snapshot()
-        snapshot.appendSections([.name, .category, .brand, .color, .price, .orderDate])
+        snapshot.appendSections([.name, .category, .brand, .size, .color, .price, .orderDate])
         /// 1~16 TextFieldContentView.swift 확인
         /// 17. AddViewController + CellConfiguration.swift 확인
         /// 18. AddViewController.swift 확인
@@ -215,6 +223,7 @@ extension AddViewController {
         snapshot.appendItems([.header(Section.name.name), .editName(item.name)], toSection: .name)
         snapshot.appendItems([.header(Section.category.name), .editCategory(item.category)], toSection: .category)
         snapshot.appendItems([.header(Section.brand.name), .editBrand(item.brand)], toSection: .brand)
+        snapshot.appendItems([.header(Section.size.name), .editSize(item.size ?? "-")], toSection: .size) //code 198, what difference? what is parameter?
         snapshot.appendItems([.header(Section.color.name), .editColor(item.color)], toSection: .color)
         snapshot.appendItems([.header(Section.price.name), .editPrice(item.price)], toSection: .price)
         snapshot.appendItems([.header(Section.orderDate.name), .editOrderDate(item.orderDate)], toSection: .orderDate)
