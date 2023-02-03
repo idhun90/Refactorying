@@ -22,6 +22,7 @@
 		1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */; };
 		1429F8B7298CEF88006428A0 /* UIContentConfiguration+Stateless.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */; };
 		1429F8B9298D684E006428A0 /* DatePickerVContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */; };
+		1429F8BB298D8952006428A0 /* SelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8BA298D8952006428A0 /* SelectViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldContentView.swift; sourceTree = "<group>"; };
 		1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIContentConfiguration+Stateless.swift"; sourceTree = "<group>"; };
 		1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerVContentView.swift; sourceTree = "<group>"; };
+		1429F8BA298D8952006428A0 /* SelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		1429F8B0298CE4CA006428A0 /* Add&Edit */ = {
 			isa = PBXGroup;
 			children = (
+				1429F8BA298D8952006428A0 /* SelectViewController.swift */,
 				1429F8A5298BB6ED006428A0 /* AddViewController.swift */,
 				1429F8AE298CE4B2006428A0 /* AddViewController + CellConfiguration.swift */,
 			);
@@ -196,6 +199,7 @@
 				1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */,
 				1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */,
 				1429F896298BB6CA006428A0 /* ViewController.swift in Sources */,
+				1429F8BB298D8952006428A0 /* SelectViewController.swift in Sources */,
 				1429F8AD298C1A6F006428A0 /* MainViewController + Actions.swift in Sources */,
 				1429F892298BB6CA006428A0 /* AppDelegate.swift in Sources */,
 				1429F8AB298BFF2E006428A0 /* MainViewController.swift in Sources */,

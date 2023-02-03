@@ -203,7 +203,7 @@ extension AddViewController {
             if let price = price {
                 cell.contentConfiguration = titleConfiguration(for: cell, with: String(price), placeholder: "price")
             } else {
-                cell.contentConfiguration = titleConfiguration(for: cell, with: "-", placeholder: "price")
+                cell.contentConfiguration = titleConfiguration(for: cell, with: nil, placeholder: "price")
             }
         case (.orderDate, .editOrderDate(let date)):
             cell.contentConfiguration = datePickerConfiguration(for: cell, with: date)
@@ -213,7 +213,7 @@ extension AddViewController {
     }
 }
 
-//MARK: - 편집 모드 일 때
+//MARK: - 편집 모드 일 때(Editing Mode)
 extension AddViewController {
     
     private func updateSnapshotForEditing() {
@@ -237,5 +237,20 @@ extension AddViewController {
 }
 
 extension AddViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if isEditing {
+            guard let row = dataSource.itemIdentifier(for: indexPath) else { return }
+            switch row {
+            case .editCategory(_): showSelectView()
+            case .editBrand(_): showSelectView()
+            case .editSize(_): showSelectView()
+            default: print("nothing")
+            }
+        }
+    }
     
+    private func showSelectView() {
+        let viewController = SelectViewController()
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }
