@@ -40,7 +40,7 @@ extension AddViewController {
     
     /// 1~16 TextFieldContentView.swift 확인
     /// 17. TextFieldContentView.Configuration를 반환하는 메소드 생성
-    func titleConfiguration(for cell: UICollectionViewListCell, with title: String?, placeholder: String?) -> TextFieldContentView.Configuration {
+    func textFieldConfiguration(for cell: UICollectionViewListCell, with title: String?, placeholder: String?) -> TextFieldContentView.Configuration {
         var contentConfiguration = cell.textFieldConfiguration()
         contentConfiguration.text = title
         contentConfiguration.placeholder = placeholder

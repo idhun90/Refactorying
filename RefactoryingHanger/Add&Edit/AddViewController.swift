@@ -187,7 +187,7 @@ extension AddViewController {
             cell.contentConfiguration = listConfiguration(for: cell, at: row)
         ///20. (.name, editName(let title)에 대한 case 및 titleConfiguration 적용
         case (.name, .editName(let name)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: name, placeholder: "name")
+            cell.contentConfiguration = textFieldConfiguration(for: cell, with: name, placeholder: "name")
         case (.category, .editCategory(let category)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .category)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
@@ -198,12 +198,12 @@ extension AddViewController {
             cell.contentConfiguration = editListConfiguration(for: cell, with: size, at: .size)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.color, .editColor(let color)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: color, placeholder: "color")
+            cell.contentConfiguration = textFieldConfiguration(for: cell, with: color, placeholder: "color")
         case (.price, .editPrice(let price)):
             if let price = price {
-                cell.contentConfiguration = titleConfiguration(for: cell, with: String(price), placeholder: "price")
+                cell.contentConfiguration = textFieldConfiguration(for: cell, with: String(price), placeholder: "price")
             } else {
-                cell.contentConfiguration = titleConfiguration(for: cell, with: nil, placeholder: "price")
+                cell.contentConfiguration = textFieldConfiguration(for: cell, with: nil, placeholder: "price")
             }
         case (.orderDate, .editOrderDate(let date)):
             cell.contentConfiguration = datePickerConfiguration(for: cell, with: date)
@@ -246,7 +246,11 @@ extension AddViewController: UICollectionViewDelegate {
             case .editSize(_): showSelectView()
             default: print("nothing")
             }
+            
+            //@available(iOS 16.0, *)
+            //PopMenu?
         }
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
     
     private func showSelectView() {

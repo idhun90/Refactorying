@@ -58,6 +58,7 @@ final class SelectViewController: UIViewController {
             case .defaultList:
                 contentConfiguration.textProperties.alignment = .natural
                 cell.accessories = [.checkmark()]
+        
             case .add:
                 contentConfiguration.textProperties.alignment = .center
                 contentConfiguration.textProperties.color = .link
@@ -80,5 +81,7 @@ final class SelectViewController: UIViewController {
     }
 }
 extension SelectViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
+    }
 }
