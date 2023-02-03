@@ -76,7 +76,7 @@ final class SelectViewController: UIViewController {
         snapshot = Snapshot()
         snapshot.appendSections([.defaultList, .add])
         snapshot.appendItems(["None"], toSection: .defaultList)
-        snapshot.appendItems(["Add"], toSection: .add)
+        snapshot.appendItems(["Add Custom"], toSection: .add)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }

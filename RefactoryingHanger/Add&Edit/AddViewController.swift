@@ -246,11 +246,12 @@ extension AddViewController: UICollectionViewDelegate {
             case .editSize(_): showSelectView()
             default: print("nothing")
             }
-            
             //@available(iOS 16.0, *)
             //PopMenu?
+            collectionView.deselectItem(at: indexPath, animated: true)
+        } else {
+            collectionView.deselectItem(at: indexPath, animated: false)
         }
-        collectionView.deselectItem(at: indexPath, animated: true)
     }
     
     private func showSelectView() {
