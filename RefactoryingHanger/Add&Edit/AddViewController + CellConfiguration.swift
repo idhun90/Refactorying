@@ -19,7 +19,7 @@ extension AddViewController {
         return contentConfiguration
     }
     
-    func editListConfiguration(for cell: UICollectionViewListCell, with value: String, at row: Row) -> UIListContentConfiguration {
+    func editListConfiguration(for cell: UICollectionViewListCell, with value: String?, at row: Row) -> UIListContentConfiguration {
         var contentConfiguration = UIListContentConfiguration.valueCell()
         contentConfiguration.text = text(for: row)
         contentConfiguration.secondaryText = value
@@ -55,7 +55,12 @@ extension AddViewController {
         case .brand: return item.brand
         case .size: return item.size ?? "-"
         case .color: return item.color ?? "-"
-        case .price: return String(item.price ?? 0)
+        case .price:
+            if let price = item.price {
+                return String(price)
+            } else {
+                return "-"
+            }
         case .orderDate: return item.orderDate.formatted(date: .numeric, time: .omitted)
         default: return nil // header case는 Nil이 되도록
         }

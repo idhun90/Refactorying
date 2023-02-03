@@ -35,6 +35,6 @@ extension Item {
         Item(name: "tee", category: "Top", brand: "apple", size: "S", orderDate: Date.now),
         Item(name: "bottom", category: "Bottom", brand: "google", size: "M", orderDate: Date.now),
         Item(name: "outer", category: "Outer", brand: "smasung", size: "M", orderDate: Date.now, isComplete: true),
-        Item(name: "coat", category: "Outer", brand: "lg", size: "L", orderDate: Date.now)
+        Item(name: "coat", category: "Outer", brand: "lg", size: nil, orderDate: Date.now)
     ]
 }

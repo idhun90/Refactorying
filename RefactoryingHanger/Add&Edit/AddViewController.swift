@@ -195,12 +195,16 @@ extension AddViewController {
             cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .brand)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.size, .editSize(let size)):
-            cell.contentConfiguration = editListConfiguration(for: cell, with: size ?? "-", at: .size)
+            cell.contentConfiguration = editListConfiguration(for: cell, with: size, at: .size)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.color, .editColor(let color)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: color, placeholder: "color")
         case (.price, .editPrice(let price)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: String(price ?? 0), placeholder: "price")
+            if let price = price {
+                cell.contentConfiguration = titleConfiguration(for: cell, with: String(price), placeholder: "price")
+            } else {
+                cell.contentConfiguration = titleConfiguration(for: cell, with: "-", placeholder: "price")
+            }
         case (.orderDate, .editOrderDate(let date)):
             cell.contentConfiguration = datePickerConfiguration(for: cell, with: date)
         default:
@@ -223,7 +227,7 @@ extension AddViewController {
         snapshot.appendItems([.header(Section.name.name), .editName(item.name)], toSection: .name)
         snapshot.appendItems([.header(Section.category.name), .editCategory(item.category)], toSection: .category)
         snapshot.appendItems([.header(Section.brand.name), .editBrand(item.brand)], toSection: .brand)
-        snapshot.appendItems([.header(Section.size.name), .editSize(item.size ?? "-")], toSection: .size) //code 198, what difference? what is parameter?
+        snapshot.appendItems([.header(Section.size.name), .editSize(item.size ?? "None")], toSection: .size) //code 198, what difference? what is parameter?
         snapshot.appendItems([.header(Section.color.name), .editColor(item.color)], toSection: .color)
         snapshot.appendItems([.header(Section.price.name), .editPrice(item.price)], toSection: .price)
         snapshot.appendItems([.header(Section.orderDate.name), .editOrderDate(item.orderDate)], toSection: .orderDate)
