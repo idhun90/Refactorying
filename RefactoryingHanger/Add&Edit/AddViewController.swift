@@ -187,7 +187,7 @@ extension AddViewController {
             cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .category)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.brand, .editBrand(let brand)):
-            cell.contentConfiguration = titleConfiguration(for: cell, with: brand, placeholder: "brand")
+            cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .brand)
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.color, .editColor(let color)):
             cell.contentConfiguration = titleConfiguration(for: cell, with: color, placeholder: "color")
