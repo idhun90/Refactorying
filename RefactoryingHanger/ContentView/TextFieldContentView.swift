@@ -14,6 +14,8 @@ final class TextFieldContentView: UIView, UIContentView { /// 5. UIConteontView 
         
         var text: String? = "" ///9. 빈 문자열 프로퍼티 생성, 우리가 사용할 모든 프로퍼티를 이 곳에 설정하면 되는 것 같다.
         var placeholder: String?
+        var keyboardType: UIKeyboardType = .default
+        var onChange: (String) -> Void = { _ in }
         
         /// 9. UIContentConfiguration 프로토콜 준수를 위해 makeContentView() 구현, update 메소드는 4번 참조.
         /// makeContentView 메소드는 초기화할 때 반환한다.
@@ -54,6 +56,8 @@ final class TextFieldContentView: UIView, UIContentView { /// 5. UIConteontView 
         super.init(frame: .zero)
         addCommonSubView(textField)
         textField.clearButtonMode = .whileEditing
+        textField.autocapitalizationType = .none
+        textField.addTarget(self, action: #selector(didChange(_:)), for: .editingChanged)
     }
     
     /// 4. UIContentConfiguration 프로토콜 필수 메서드 구현 (UIContentConfiguration+Stateless.swift)
@@ -64,13 +68,19 @@ final class TextFieldContentView: UIView, UIContentView { /// 5. UIConteontView 
     
     /// 11. ContentConfiguration은 사용자 UI가 앱의 state와 동기화되도록 유지하는데 도움이 된다.
     /// configuration 프로퍼티가 변경될 때마다 사용자 UI를 업데이트하여 title TextField의 상태와 사용자 UI가 동기화 상태를 유지하도록 할 것이다.
-    /// 그런 다음 AddViewController+CellConfiguration.swift에 확장하여 편집 모드일 때 제품명 textFiled와 페어링을 이루는 textField configuration을 반환하는 함수를 포함할 것이다.
+    /// 그런 다음 DetailViewController+CellConfiguration.swift에 확장하여 편집 모드일 때 제품명 textFiled와 페어링을 이루는 textField configuration을 반환하는 함수를 포함할 것이다.
     
     func configure(configuration: UIContentConfiguration) {
         guard let configuration = configuration as? Configuration else { return } /// 12. TextFieldContentView.Configuration으로 캐스팅해서 프로퍼티 접근 -> 텍스트필드에 연결될 수 있도록 text 프로퍼티가 configuration에 존재해야 한다. (9번)
         /// 13. configuration에서 textField.text 값을 업데이트한다.
         textField.text = configuration.text
         textField.placeholder = configuration.placeholder
+        textField.keyboardType = configuration.keyboardType
+    }
+    
+    @objc private func didChange(_ sender: UITextField) {
+        guard let configuration = configuration as? TextFieldContentView.Configuration else { return }
+        configuration.onChange(sender.text ?? "")
     }
 }
 

@@ -10,6 +10,7 @@ final class DatePickerContentView: UIView, UIContentView {
     
     struct Configuration: UIContentConfiguration {
         var date = Date.now
+        var onchange: ((Date) -> Void) = { _ in }
         
         func makeContentView() -> UIView & UIContentView {
             return DatePickerContentView(self)
@@ -63,7 +64,8 @@ final class DatePickerContentView: UIView, UIContentView {
     }
     
     @objc func didChangePickerValue(_ sender: UIDatePicker) {
-        
+        guard let configuration = configuration as? DatePickerContentView.Configuration else { return }
+        configuration.onchange(sender.date)
     }
     
 }
