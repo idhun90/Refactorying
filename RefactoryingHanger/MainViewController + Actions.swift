@@ -16,8 +16,8 @@ extension MainViewController {
     
     @objc func tappedAddButton(_ sender: UIBarButtonItem) {
         print("Add Button Tapped")
-        //let vc = AddViewController()
-        //present(vc, animated: true)
+        let vc = EditViewController()
+        present(vc, animated: true)
     }
 }
 

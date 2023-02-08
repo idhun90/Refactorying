@@ -13,16 +13,19 @@
 		1429F899298BB6CA006428A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1429F897298BB6CA006428A0 /* Main.storyboard */; };
 		1429F89B298BB6CB006428A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1429F89A298BB6CB006428A0 /* Assets.xcassets */; };
 		1429F89E298BB6CB006428A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1429F89C298BB6CB006428A0 /* LaunchScreen.storyboard */; };
-		1429F8A6298BB6ED006428A0 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8A5298BB6ED006428A0 /* AddViewController.swift */; };
+		1429F8A6298BB6ED006428A0 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8A5298BB6ED006428A0 /* DetailViewController.swift */; };
 		1429F8A9298BB891006428A0 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8A8298BB891006428A0 /* Item.swift */; };
 		1429F8AB298BFF2E006428A0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8AA298BFF2E006428A0 /* MainViewController.swift */; };
 		1429F8AD298C1A6F006428A0 /* MainViewController + Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8AC298C1A6F006428A0 /* MainViewController + Actions.swift */; };
-		1429F8AF298CE4B2006428A0 /* AddViewController + CellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8AE298CE4B2006428A0 /* AddViewController + CellConfiguration.swift */; };
+		1429F8AF298CE4B2006428A0 /* DetailViewController + CellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8AE298CE4B2006428A0 /* DetailViewController + CellConfiguration.swift */; };
 		1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */; };
 		1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */; };
 		1429F8B7298CEF88006428A0 /* UIContentConfiguration+Stateless.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */; };
 		1429F8B9298D684E006428A0 /* DatePickerVContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */; };
-		1429F8BB298D8952006428A0 /* SelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8BA298D8952006428A0 /* SelectViewController.swift */; };
+		1429F8BB298D8952006428A0 /* SelectBrandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1429F8BA298D8952006428A0 /* SelectBrandViewController.swift */; };
+		1436FCB5298E688400C07BDF /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1436FCB4298E688400C07BDF /* EditViewController.swift */; };
+		1471E32D29912A3D004916F4 /* DetailViewController(Backup).swift in Sources */ = {isa = PBXBuildFile; fileRef = 1471E32C29912A3D004916F4 /* DetailViewController(Backup).swift */; };
+		1471E32F29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift in Sources */ = {isa = PBXBuildFile; fileRef = 1471E32E29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,16 +37,19 @@
 		1429F89A298BB6CB006428A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1429F89D298BB6CB006428A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1429F89F298BB6CB006428A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1429F8A5298BB6ED006428A0 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		1429F8A5298BB6ED006428A0 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		1429F8A8298BB891006428A0 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		1429F8AA298BFF2E006428A0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		1429F8AC298C1A6F006428A0 /* MainViewController + Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController + Actions.swift"; sourceTree = "<group>"; };
-		1429F8AE298CE4B2006428A0 /* AddViewController + CellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddViewController + CellConfiguration.swift"; sourceTree = "<group>"; };
+		1429F8AE298CE4B2006428A0 /* DetailViewController + CellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController + CellConfiguration.swift"; sourceTree = "<group>"; };
 		1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+CommonSubView.swift"; sourceTree = "<group>"; };
 		1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldContentView.swift; sourceTree = "<group>"; };
 		1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIContentConfiguration+Stateless.swift"; sourceTree = "<group>"; };
 		1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerVContentView.swift; sourceTree = "<group>"; };
-		1429F8BA298D8952006428A0 /* SelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectViewController.swift; sourceTree = "<group>"; };
+		1429F8BA298D8952006428A0 /* SelectBrandViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBrandViewController.swift; sourceTree = "<group>"; };
+		1436FCB4298E688400C07BDF /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		1471E32C29912A3D004916F4 /* DetailViewController(Backup).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController(Backup).swift"; sourceTree = "<group>"; };
+		1471E32E29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController + CellConfiguration(Backup).swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +86,8 @@
 				1429F891298BB6CA006428A0 /* AppDelegate.swift */,
 				1429F893298BB6CA006428A0 /* SceneDelegate.swift */,
 				1429F8B1298CE907006428A0 /* ContentView */,
-				1429F8B0298CE4CA006428A0 /* Add&Edit */,
+				1436FCB3298E681700C07BDF /* Edit */,
+				1429F8B0298CE4CA006428A0 /* Detail */,
 				1429F8AA298BFF2E006428A0 /* MainViewController.swift */,
 				1429F8AC298C1A6F006428A0 /* MainViewController + Actions.swift */,
 				1429F895298BB6CA006428A0 /* ViewController.swift */,
@@ -100,25 +107,35 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		1429F8B0298CE4CA006428A0 /* Add&Edit */ = {
+		1429F8B0298CE4CA006428A0 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				1429F8BA298D8952006428A0 /* SelectViewController.swift */,
-				1429F8A5298BB6ED006428A0 /* AddViewController.swift */,
-				1429F8AE298CE4B2006428A0 /* AddViewController + CellConfiguration.swift */,
+				1429F8A5298BB6ED006428A0 /* DetailViewController.swift */,
+				1429F8AE298CE4B2006428A0 /* DetailViewController + CellConfiguration.swift */,
+				1471E32E29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift */,
+				1471E32C29912A3D004916F4 /* DetailViewController(Backup).swift */,
 			);
-			path = "Add&Edit";
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		1429F8B1298CE907006428A0 /* ContentView */ = {
 			isa = PBXGroup;
 			children = (
-				1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */,
 				1429F8B4298CEAC5006428A0 /* TextFieldContentView.swift */,
 				1429F8B8298D684E006428A0 /* DatePickerVContentView.swift */,
 				1429F8B6298CEF88006428A0 /* UIContentConfiguration+Stateless.swift */,
+				1429F8B2298CE926006428A0 /* UIView+CommonSubView.swift */,
 			);
 			path = ContentView;
+			sourceTree = "<group>";
+		};
+		1436FCB3298E681700C07BDF /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				1429F8BA298D8952006428A0 /* SelectBrandViewController.swift */,
+				1436FCB4298E688400C07BDF /* EditViewController.swift */,
+			);
+			path = Edit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,16 +211,19 @@
 			files = (
 				1429F8B7298CEF88006428A0 /* UIContentConfiguration+Stateless.swift in Sources */,
 				1429F8A9298BB891006428A0 /* Item.swift in Sources */,
-				1429F8AF298CE4B2006428A0 /* AddViewController + CellConfiguration.swift in Sources */,
+				1471E32D29912A3D004916F4 /* DetailViewController(Backup).swift in Sources */,
+				1429F8AF298CE4B2006428A0 /* DetailViewController + CellConfiguration.swift in Sources */,
 				1429F8B9298D684E006428A0 /* DatePickerVContentView.swift in Sources */,
 				1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */,
 				1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */,
+				1436FCB5298E688400C07BDF /* EditViewController.swift in Sources */,
 				1429F896298BB6CA006428A0 /* ViewController.swift in Sources */,
-				1429F8BB298D8952006428A0 /* SelectViewController.swift in Sources */,
+				1429F8BB298D8952006428A0 /* SelectBrandViewController.swift in Sources */,
 				1429F8AD298C1A6F006428A0 /* MainViewController + Actions.swift in Sources */,
 				1429F892298BB6CA006428A0 /* AppDelegate.swift in Sources */,
 				1429F8AB298BFF2E006428A0 /* MainViewController.swift in Sources */,
-				1429F8A6298BB6ED006428A0 /* AddViewController.swift in Sources */,
+				1471E32F29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift in Sources */,
+				1429F8A6298BB6ED006428A0 /* DetailViewController.swift in Sources */,
 				1429F894298BB6CA006428A0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

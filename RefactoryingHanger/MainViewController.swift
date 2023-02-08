@@ -31,6 +31,7 @@ final class MainViewController: UIViewController {
 extension MainViewController {
     
     private func configureNaviItem() {
+        navigationItem.title = "Main"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(tappedAddButton(_:)))
     }
     
@@ -122,7 +123,7 @@ extension MainViewController {
     
     func pushViewController(withID id: Item.ID) {
         let item = item(withID: id)
-        let vc = AddViewController(item: item)
+        let vc = DetailViewController(item: item)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
