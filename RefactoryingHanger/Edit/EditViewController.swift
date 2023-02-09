@@ -267,7 +267,13 @@ extension EditViewController: UICollectionViewDelegate {
             showNextView()
             return false
         case .editBrand(_):
-            showNextView()
+            let vc = SelectBrandViewController()
+            vc.onchange = { [weak self] brand in
+                self?.editingItem?.brand = brand
+                self?.prepareForUpdate()
+                print("Brand changed")
+            }
+            navigationController?.pushViewController(vc, animated: true)
             return false
         case .editSize(_):
             showNextView()

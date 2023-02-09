@@ -12,8 +12,8 @@ struct Item: Equatable, Identifiable {
     /// Identifiable을 채택하고 꼭 'id'라는 네이밍을 가진 UUID() 값이 존재해야함.
     var id: String = UUID().uuidString
     var name: String
-    var category: String
-    var brand: String
+    var category: String = "None"
+    var brand: String = "None"
     var size: String? // when choice accessories category, no have size
     var color: String? = nil
     var price: Double? = nil

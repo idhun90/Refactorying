@@ -31,9 +31,10 @@ final class SelectBrandViewController: UIViewController {
     
     var defaultBrand = Brand(name: "None", isSelected: true)
     var customBrands: [Brand] = []
+    //var selectedIndexPath: IndexPath = [0, 0]
     lazy var selectedBrand = defaultBrand
-    var selectedIndexPath: IndexPath = [0, 0]
     lazy var selectedID = defaultBrand.id
+    var onchange: ((String) -> Void) = { _ in }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<listSection, Brand.ID>
     private typealias Snapshot = NSDiffableDataSourceSnapshot<listSection, Brand.ID>
@@ -123,16 +124,14 @@ final class SelectBrandViewController: UIViewController {
             var contentConfiguration = UIListContentConfiguration.valueCell()
 
             switch section {
-            case .defaultList:
-                contentConfiguration.text = self.defaultBrand.name
-                
-                
-            case .customList:
-                contentConfiguration.text = self.customBrand(withID: itemIdentifier).name
+            case .defaultList: contentConfiguration.text = self.defaultBrand.name
+            case .customList: contentConfiguration.text = self.customBrand(withID: itemIdentifier).name
             }
             
             cell.contentConfiguration = contentConfiguration
             cell.accessories = itemIdentifier == self.selectedID ? [.checkmark(displayed: .always)] : []
+            //cell.accessories = indexPath == self.selectedIndexPath ? [.checkmark(displayed: .always)] : []
+            print(#function)
             
             //❌ cell.accessories = cell.isSelected ? [.checkmark()] : []
             //❌ cell.accessories = self.customBrand(withID: itemIdentifier).isSelected ? [.checkmark(displayed: .always)] : []
@@ -169,15 +168,23 @@ extension SelectBrandViewController: UICollectionViewDelegate {
         switch section {
         case .defaultList:
             print("selected:", defaultBrand.name)
+            onchange(defaultBrand.name)
             //❌ applySnapshot(reloading: [defaultBrand.id])
+//            var newSnapshot = dataSource.snapshot()
+//            newSnapshot.reconfigureItems([defaultBrand.id])
+//            dataSource.apply(newSnapshot, animatingDifferences: true)
         case .customList:
             print("selected:", customBrand(withID: id).name)
+            onchange(customBrand(withID: id).name)
             //❌ applySnapshot(reloading: [id])
+//            var newSnapshot = dataSource.snapshot()
+//            newSnapshot.reconfigureItems([id])
+//            dataSource.apply(newSnapshot, animatingDifferences: true)
         }
-        DispatchQueue.main.async {
-            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())//no animation
-        }
-        
+//        DispatchQueue.main.async {
+//            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())//no animation
+//        }
+//
         //✅ snapshot.reloadSections([.defaultList, .customList])
         //everyItem all checked
         //❌ dataSource.apply(dataSource.snapshot())
@@ -218,6 +225,10 @@ extension SelectBrandViewController: UICollectionViewDelegate {
         guard let currentSelectedId = dataSource.itemIdentifier(for: indexPath) else { return }
         if selectedID == currentSelectedId { return }
         selectedID = currentSelectedId
+        
+        DispatchQueue.main.async {
+            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())
+        }
 
 //        if self.selectedIndexPath == indexPath { return }
 //        if let previousCell = collectionView.cellForItem(at: selectedIndexPath) as? UICollectionViewListCell {
@@ -227,6 +238,7 @@ extension SelectBrandViewController: UICollectionViewDelegate {
 //            cell.accessories = [.checkmark(displayed: .always)]
 //        }
 //        self.selectedIndexPath = indexPath
+        
     }
     
     // not used
