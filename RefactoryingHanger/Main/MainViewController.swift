@@ -53,7 +53,19 @@ extension MainViewController {
     private func createLayout() -> UICollectionViewLayout {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .grouped)
         listConfiguration.showsSeparators = false
+        listConfiguration.trailingSwipeActionsConfigurationProvider = makeSwipeAction
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
+    }
+    
+    private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+        guard let indexPath = indexPath, let id = datasource.itemIdentifier(for: indexPath) else { return nil }
+        let deleteActionTitle = NSLocalizedString("Delete", comment: "Delete Action Title")
+        let deleteAction = UIContextualAction(style: .destructive, title: deleteActionTitle) { [weak self] _, _, completion in
+            self?.deleteItem(withID: id)
+            self?.applySnapshot()
+            completion(false)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     private func configureDataSource() {
@@ -123,6 +135,11 @@ extension MainViewController {
     
     func addItem(_ item: Item) {
         items.append(item)
+    }
+    
+    func deleteItem(withID id: Item.ID) {
+        var index = items.indexOfItem(with: id)
+        items.remove(at: index)
     }
     
     func pushViewController(withID id: Item.ID) {
