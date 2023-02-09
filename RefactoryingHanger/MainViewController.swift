@@ -123,7 +123,11 @@ extension MainViewController {
     
     func pushViewController(withID id: Item.ID) {
         let item = item(withID: id)
-        let vc = DetailViewController(item: item)
+        let vc = DetailViewController(item: item) { [weak self] item in
+            self?.updateItem(item)
+            self?.applySnapshot(reloading: [item.id])
+            
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
 }

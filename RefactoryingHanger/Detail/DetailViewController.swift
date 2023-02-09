@@ -49,12 +49,19 @@ enum Row: Hashable {
     private var dataSource: DataSource!
     private var snapshot: Snapshot!
     
-    var item: Item
+    var item: Item {
+        didSet {
+            print("아이템 변화 감지")
+            onChange(item)
+        }
+    }
     var editingItem: Item
+    var onChange: (Item) -> Void
     
-    init(item: Item) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
+    init(item: Item, onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
         self.item = item
         self.editingItem = item
+        self.onChange = onChange
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -149,5 +156,6 @@ extension DetailViewController {
 
 extension DetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
     }
 }
