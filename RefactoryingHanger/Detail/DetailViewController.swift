@@ -90,6 +90,7 @@ enum Row: Hashable {
             self?.editingItem = editingItem
             self?.prepareForUpdate()
         }
+        viewController.navigationItem.title = "Edit"
         let nvc = UINavigationController(rootViewController: viewController)
         present(nvc, animated: true)
     }

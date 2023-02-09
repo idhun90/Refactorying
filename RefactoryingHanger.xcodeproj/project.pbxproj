@@ -88,8 +88,7 @@
 				1429F8B1298CE907006428A0 /* ContentView */,
 				1436FCB3298E681700C07BDF /* Edit */,
 				1429F8B0298CE4CA006428A0 /* Detail */,
-				1429F8AA298BFF2E006428A0 /* MainViewController.swift */,
-				1429F8AC298C1A6F006428A0 /* MainViewController + Actions.swift */,
+				143E6764299558A300D87B13 /* Main */,
 				1429F895298BB6CA006428A0 /* ViewController.swift */,
 				1429F897298BB6CA006428A0 /* Main.storyboard */,
 				1429F89A298BB6CB006428A0 /* Assets.xcassets */,
@@ -136,6 +135,15 @@
 				1436FCB4298E688400C07BDF /* EditViewController.swift */,
 			);
 			path = Edit;
+			sourceTree = "<group>";
+		};
+		143E6764299558A300D87B13 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				1429F8AA298BFF2E006428A0 /* MainViewController.swift */,
+				1429F8AC298C1A6F006428A0 /* MainViewController + Actions.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

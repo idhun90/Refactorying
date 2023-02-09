@@ -65,7 +65,7 @@ extension MainViewController {
         })
     }
     
-    private func applySnapshot(reloading ids: [Item.ID] = []) { /// 매개변수의 값을 빈배열로 설정하면 식별자를 제공하지 않고도 viewDidLoad()에서 호출할 수 있음.
+    func applySnapshot(reloading ids: [Item.ID] = []) { /// 매개변수의 값을 빈배열로 설정하면 식별자를 제공하지 않고도 viewDidLoad()에서 호출할 수 있음.
         snapshot = Snapshot()
         snapshot.appendSections([0])
         snapshot.appendItems(items.map { $0.id })
@@ -119,6 +119,10 @@ extension MainViewController {
         print("checked, buttonState: \(item.isComplete)")
         /// 데이터는 변하지만 UI는 변하지 않음 -> 스냅샷 새로 갱신해야 한다.
         applySnapshot(reloading: [id]) /// 여전히 UI가 변하지 않는다. UI를 업데이트하려면 스냅샷의 reloadItem(_:) 메소드를 호출하여 사용자가 변경한 아이템을 스냅샷에 알려야한다.
+    }
+    
+    func addItem(_ item: Item) {
+        items.append(item)
     }
     
     func pushViewController(withID id: Item.ID) {

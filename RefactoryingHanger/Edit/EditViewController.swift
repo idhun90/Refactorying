@@ -84,11 +84,10 @@ final class EditViewController: UIViewController {
     }
     
     private func configureNavigationItem() {
-        navigationItem.title = "Edit"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tappedCloseButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tappedDoneButton))
     }
     
-    @objc private func tappedCloseButton() {
+    @objc private func tappedDoneButton() {
         guard let editingItem = editingItem else { return }
         sendEditingItem?(editingItem)
         dismiss(animated: true)
