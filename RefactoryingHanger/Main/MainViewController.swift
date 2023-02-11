@@ -16,7 +16,7 @@ final class MainViewController: UIViewController {
     private var datasource: DataSource!
     private var snapshot: Snapshot!
     
-    var items: [Item] = Item.sampleData
+    var items: [Item] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,7 +138,7 @@ extension MainViewController {
     }
     
     func deleteItem(withID id: Item.ID) {
-        var index = items.indexOfItem(with: id)
+        let index = items.indexOfItem(with: id)
         items.remove(at: index)
     }
     

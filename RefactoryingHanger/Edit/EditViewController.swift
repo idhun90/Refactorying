@@ -11,39 +11,40 @@ final class EditViewController: UIViewController {
     
     enum Section: Int, Hashable {
         case name
-        case category
-        case brand
+        case list
         case size
-        case color
         case price
         case orderDate
+        case urlAndNote
         
         var headerTitle: String {
             switch self {
             case .name: return NSLocalizedString("name", comment: "name section name")
-            case .category: return NSLocalizedString("category", comment: "category section name")
-            case .brand: return NSLocalizedString("brand", comment: "brand section name")
+            case .list: return NSLocalizedString("list", comment: "list section name")
             case .size: return NSLocalizedString("size", comment: "size section name")
-            case .color: return NSLocalizedString("color", comment: "color section name")
+            //case .color: return NSLocalizedString("color", comment: "color section name")
             case .price: return NSLocalizedString("price", comment: "price section name")
             case .orderDate: return NSLocalizedString("orderDate", comment: "orderDate section name")
+            case .urlAndNote: return NSLocalizedString("urlAndNote", comment: "urlAndNote section name")
             }
         }
     }
     
     enum Row: Hashable {
-        case header(String)
+        //case header(String)
         case editName(String)
         case editCategory(String)
         case editBrand(String)
-        case editSize(String?)
-        case editColor(String?)
+        case editSize(String)
+        case editColor(String)
         case editPrice(Double?)
         case editOrderDate(Date)
+        case editUrl(String)
+        case editNote(String)
         
-        var text: String? {
+        var text: String {
             switch self {
-            case .header(_): return nil
+            //case .header(_): return nil
             case .editName(_): return "Name"
             case .editCategory(_): return "Category"
             case .editBrand(_): return "Brand"
@@ -51,6 +52,8 @@ final class EditViewController: UIViewController {
             case .editColor(_): return "Color"
             case .editPrice(_): return "Price"
             case .editOrderDate(_): return "OrderDate"
+            case .editUrl(_): return "URL"
+            case .editNote(_): return "Note"
             }
         }
     }
@@ -111,8 +114,8 @@ final class EditViewController: UIViewController {
     }
     
     private func createLayout() -> UICollectionViewLayout {
-        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        listConfiguration.headerMode = .firstItemInSection
+        let listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        //listConfiguration.headerMode = .firstItemInSection
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
     }
     
@@ -126,17 +129,17 @@ final class EditViewController: UIViewController {
     private func applySnapshot() {
         guard let item = item else { return }
         snapshot = Snapshot()
-        snapshot.appendSections([.name, .category, .brand, .size, .color, .price, .orderDate])
-        snapshot.appendItems([.header(Section.name.headerTitle), .editName(item.name)], toSection: .name)
-        snapshot.appendItems([.header(Section.category.headerTitle), .editCategory(item.category)], toSection: .category)
-        snapshot.appendItems([.header(Section.brand.headerTitle), .editBrand(item.brand)], toSection: .brand)
-        snapshot.appendItems([.header(Section.size.headerTitle), .editSize(item.size ?? "None")], toSection: .size)
-        snapshot.appendItems([.header(Section.color.headerTitle), .editColor(item.color)], toSection: .color)
-        snapshot.appendItems([.header(Section.price.headerTitle), .editPrice(item.price)], toSection: .price)
-        snapshot.appendItems([.header(Section.orderDate.headerTitle), .editOrderDate(item.orderDate)], toSection: .orderDate)
+        snapshot.appendSections([.name, .list, .size, .price, .orderDate, .urlAndNote])
+        snapshot.appendItems([.editName(item.name)], toSection: .name)
+        snapshot.appendItems([.editCategory(item.category), .editBrand(item.brand), .editColor(item.color)], toSection: .list)
+        snapshot.appendItems([.editSize(item.size)], toSection: .size)
+        //snapshot.appendItems([.editColor(item.color)], toSection: .color)
+        snapshot.appendItems([.editPrice(item.price)], toSection: .price)
+        snapshot.appendItems([.editOrderDate(item.orderDate)], toSection: .orderDate)
+        snapshot.appendItems([.editUrl(item.url), .editNote(item.note)], toSection: .urlAndNote)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-    
+
     private func prepareForUpdate() {
         if editingItem != item {
             item = editingItem
@@ -149,21 +152,20 @@ extension EditViewController {
     private func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
         guard let section = Section(rawValue: indexPath.section) else { return }
         switch (section, row) {
-        case (_, .header(let title)):
-            cell.contentConfiguration = headerConfiguration(for: cell, with: title)
         case (.name, .editName(let name)):
             cell.contentConfiguration = textFieldConfiguration(for: cell, with: name, placeholder: Row.editName("").text, row: .editName(""))
-        case (.category, .editCategory(let category)):
+        case (.list, .editCategory(let category)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .editCategory(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
-        case (.brand, .editBrand(let brand)):
+        case (.list, .editBrand(let brand)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .editBrand(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
-        case (.size, .editSize(let size)):
-            cell.contentConfiguration = editListConfiguration(for: cell, with: size, at: .editSize(nil))
+        case (.list, .editColor(let color)):
+            cell.contentConfiguration = editListConfiguration(for: cell, with: color, at: .editColor(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
-        case (.color, .editColor(let color)):
-            cell.contentConfiguration = textFieldConfiguration(for: cell, with: color, placeholder: Row.editColor(nil).text, row: .editColor(nil))
+        case (.size, .editSize(let size)):
+            cell.contentConfiguration = editListConfiguration(for: cell, with: size, at: .editSize(""))
+            cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.price, .editPrice(let price)):
             if let price = price {
                 cell.contentConfiguration = textFieldConfiguration(for: cell, with: String(price), placeholder: Row.editPrice(nil).text, row: .editPrice(nil))
@@ -172,6 +174,10 @@ extension EditViewController {
             }
         case (.orderDate, .editOrderDate(let date)):
             cell.contentConfiguration = datePickerConfiguration(for: cell, with: date)
+        case (.urlAndNote, .editUrl(let url)):
+            cell.contentConfiguration = textFieldConfiguration(for: cell, with: url, placeholder: Row.editUrl("").text, row: .editUrl(""))
+        case (.urlAndNote, .editNote(let note)):
+            cell.contentConfiguration = textViewConfiguration(for: cell, with: note)
         default:
             fatalError("error (section, row)")
         }
@@ -213,20 +219,45 @@ extension EditViewController {
             switch row {
             case .editName(_):
                 self?.editingItem?.name = text
-            case .editColor(_):
-                self?.editingItem?.color = text
             case .editPrice(_):
                 self?.editingItem?.price = self?.doubleConvertToString(with: text)
+            case .editUrl(_):
+                self?.editingItem?.url = text
             default: fatalError("텍스트필드 클로저 문제 발생")
             }
         }
         return contentConfiguration
     }
+    
+    func textViewConfiguration(for cell: UICollectionViewListCell, with note: String) -> TextViewContentView.Configuration {
+        var contentConfiguration = cell.TextViewConfiguration()
+        contentConfiguration.text = setPlaceholder(with: note)
+        contentConfiguration.textColor = setTextColor(with: note)
+        contentConfiguration.onchange = { [weak self] note in
+            self?.editingItem?.note = note
+        }
+        return contentConfiguration
+    }
+    
+    private func setPlaceholder(with note: String) -> String {
+        if note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "Note"
+        } else {
+            return note
+        }
+    }
+    private func setTextColor(with note: String) -> UIColor? {
+        if note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || note == "Note" {
+            return .placeholderText
+        } else {
+            return .label
+        }
+    }
     private func keyboardType(row: Row) -> UIKeyboardType {
         switch row {
         case .editName(_): return .default
-        case .editColor(_): return .default
         case .editPrice(_): return .decimalPad
+        case .editUrl(_): return .URL
         default: fatalError("TextField KeyboardType Erorr")
         }
     }
@@ -239,18 +270,19 @@ extension EditViewController {
         }
         
     }
-    
 
     func text(for row: Row) -> String? {
         switch row {
-        case .header(_): return nil
-        case .editName(_): return Row.header("").text
+//        case .header(_): return nil
+        case .editName(_): return Row.editName("").text
         case .editCategory(_): return Row.editCategory("").text
         case .editBrand(_): return Row.editBrand("").text
-        case .editSize(_): return Row.editSize(nil).text
-        case .editColor(_): return Row.editColor(nil).text
+        case .editSize(_): return Row.editSize("").text
+        case .editColor(_): return Row.editColor("").text
         case .editPrice(_): return Row.editPrice(nil).text
         case .editOrderDate(_): return Row.editOrderDate(Date()).text
+        case .editUrl(_): return Row.editUrl("").text
+        case .editNote(_): return Row.editNote("").text
         }
     }
 }
@@ -267,12 +299,16 @@ extension EditViewController: UICollectionViewDelegate {
             return false
         case .editBrand(_):
             let vc = SelectBrandViewController()
+            //vc.fetchCustomBrands([Brand(name: "테스트")], name: "테스트")
             vc.onchange = { [weak self] brand in
                 self?.editingItem?.brand = brand
                 self?.prepareForUpdate()
                 print("Brand changed")
             }
             navigationController?.pushViewController(vc, animated: true)
+            return false
+        case .editColor(_):
+            showNextView()
             return false
         case .editSize(_):
             showNextView()

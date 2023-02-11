@@ -14,11 +14,13 @@ struct Item: Equatable, Identifiable {
     var name: String
     var category: String = "None"
     var brand: String = "None"
-    var size: String? // when choice accessories category, no have size
-    var color: String? = nil
+    var size: String = "None" // when choice accessories category, no have size
+    var color: String = "None"
     var price: Double? = nil
     var orderDate: Date
     var isComplete: Bool = false
+    var url: String = ""
+    var note: String = ""
 }
 
 extension Array where Element == Item { // 요소가 Item일 때의 조건 적용
@@ -35,6 +37,6 @@ extension Item {
         Item(name: "tee", category: "Top", brand: "apple", size: "S", orderDate: Date.now),
         Item(name: "bottom", category: "Bottom", brand: "google", size: "M", orderDate: Date.now),
         Item(name: "outer", category: "Outer", brand: "smasung", size: "M", orderDate: Date.now, isComplete: true),
-        Item(name: "coat", category: "Outer", brand: "lg", size: nil, orderDate: Date.now)
+        Item(name: "coat", category: "Outer", brand: "lg", size: "xs", orderDate: Date.now)
     ]
 }

@@ -10,7 +10,6 @@ import UIKit
 struct Brand: Identifiable, Hashable {
     var id: String = UUID().uuidString
     var name: String
-    var isSelected: Bool = false
 }
 
 extension Array where Element == Brand {
@@ -19,6 +18,13 @@ extension Array where Element == Brand {
             fatalError("no have maching brand")
         }
         return index
+    }
+    
+    func NameOfCustomBrand(withName name: String) -> Brand {
+        guard let brand = self.first(where: { $0.name == name } ) else {
+            fatalError("no have maching brand")
+        }
+        return brand
     }
 }
 
@@ -29,10 +35,8 @@ final class SelectBrandViewController: UIViewController {
         case customList
     }
     
-    var defaultBrand = Brand(name: "None", isSelected: true)
-    var customBrands: [Brand] = []
-    //var selectedIndexPath: IndexPath = [0, 0]
-    lazy var selectedBrand = defaultBrand
+    var defaultBrand = Brand(name: "None")
+    lazy var customBrands: [Brand] = [defaultBrand]
     lazy var selectedID = defaultBrand.id
     var onchange: ((String) -> Void) = { _ in }
     
@@ -50,6 +54,7 @@ final class SelectBrandViewController: UIViewController {
         view.autocapitalizationType = .none
         return view
     }()
+    
     private var collectionView: UICollectionView!
     private var dataSource: DataSource!
     private var snapshot: Snapshot!
@@ -62,6 +67,16 @@ final class SelectBrandViewController: UIViewController {
         configureDataSource()
         applySnapshot()
         isModalInPresentation = true
+    }
+    
+    func fetchCustomBrands(_ Brands: [Brand], name: String) {
+        customBrands = Brands
+        selectedID = customBrandID(withName: name)
+    }
+    
+    private func customBrandID(withName name: String) -> Brand.ID {
+        let brand = customBrands.NameOfCustomBrand(withName: name)
+        return brand.id
     }
     
     private func customBrand(withID id: Brand.ID) -> Brand {
@@ -152,7 +167,7 @@ final class SelectBrandViewController: UIViewController {
         snapshot = Snapshot()
         snapshot.appendSections([.defaultList, .customList])
         snapshot.appendItems([defaultBrand.id], toSection: .defaultList)
-        snapshot.appendItems((customBrands.map { $0.id }).reversed(), toSection: .customList) // 새로 추가되는 아이템이 맨 위로 가도록, added item to top cell
+        snapshot.appendItems((customBrands.filter { $0.id != defaultBrand.id }.map { $0.id }).reversed(), toSection: .customList) // 새로 추가되는 아이템이 맨 위로 가도록, added item to top cell
         if !ids.isEmpty {
             snapshot.reloadItems(ids)
         }
@@ -163,24 +178,10 @@ extension SelectBrandViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         updateSelectedId(collectionView: collectionView, indexPath: indexPath)
-        guard let section = listSection(rawValue: indexPath.section) else { return }
         guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
-        switch section {
-        case .defaultList:
-            print("selected:", defaultBrand.name)
-            onchange(defaultBrand.name)
-            //❌ applySnapshot(reloading: [defaultBrand.id])
-//            var newSnapshot = dataSource.snapshot()
-//            newSnapshot.reconfigureItems([defaultBrand.id])
-//            dataSource.apply(newSnapshot, animatingDifferences: true)
-        case .customList:
-            print("selected:", customBrand(withID: id).name)
-            onchange(customBrand(withID: id).name)
-            //❌ applySnapshot(reloading: [id])
-//            var newSnapshot = dataSource.snapshot()
-//            newSnapshot.reconfigureItems([id])
-//            dataSource.apply(newSnapshot, animatingDifferences: true)
-        }
+        print("selected:", customBrand(withID: id).name)
+        onchange(customBrand(withID: id).name)
+
 //        DispatchQueue.main.async {
 //            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())//no animation
 //        }
@@ -242,26 +243,26 @@ extension SelectBrandViewController: UICollectionViewDelegate {
     }
     
     // not used
-    private func changeToggle(withID id: Brand.ID) {
-        var selectedBrand = customBrand(withID: id)
-        var anotherBrand = customBrands.filter { ($0.id != id)&&($0.isSelected) }
-        print(anotherBrand)
-        if !anotherBrand.isEmpty {
-            for index in 0...anotherBrand.count-1 {
-                if anotherBrand[index].isSelected {
-                    anotherBrand[index].isSelected.toggle()
-                    updateBrand(anotherBrand[index])
-                    applySnapshot(reloading: [anotherBrand[index].id])
-                }
-            }
-        }
-    
-        if !selectedBrand.isSelected {
-            selectedBrand.isSelected.toggle()
-            updateBrand(selectedBrand)
-            applySnapshot(reloading: [id])
-        }
-    }
+//    private func changeToggle(withID id: Brand.ID) {
+//        var selectedBrand = customBrand(withID: id)
+//        var anotherBrand = customBrands.filter { ($0.id != id)&&($0.isSelected) }
+//        print(anotherBrand)
+//        if !anotherBrand.isEmpty {
+//            for index in 0...anotherBrand.count-1 {
+//                if anotherBrand[index].isSelected {
+//                    anotherBrand[index].isSelected.toggle()
+//                    updateBrand(anotherBrand[index])
+//                    applySnapshot(reloading: [anotherBrand[index].id])
+//                }
+//            }
+//        }
+//
+//        if !selectedBrand.isSelected {
+//            selectedBrand.isSelected.toggle()
+//            updateBrand(selectedBrand)
+//            applySnapshot(reloading: [id])
+//        }
+//    }
     
     private func updateBrand(_ brand: Brand) {
         let index = customBrands.indexOfCustomBrand(withID: brand.id)
