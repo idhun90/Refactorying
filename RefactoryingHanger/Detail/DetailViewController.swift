@@ -57,10 +57,18 @@ enum Row: Hashable {
     }
     var editingItem: Item
     var onChange: (Item) -> Void
+    var customBrands: [Brand] {
+        didSet {
+            print("커스텀 브랜드 변화 감지")
+            brandsOnChange(customBrands)
+        }
+    }
+    var brandsOnChange: (([Brand]) -> Void) = { _ in }
     
-    init(item: Item, onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
+    init(item: Item, customBrands: [Brand], onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
         self.item = item
         self.editingItem = item
+        self.customBrands = customBrands
         self.onChange = onChange
         super.init(nibName: nil, bundle: nil)
     }
@@ -86,9 +94,13 @@ enum Row: Hashable {
     @objc private func tappedEditButton() {
         let viewController = EditViewController()
         viewController.fetchItem(with: item)
+        viewController.fetchCustomBrands(with: customBrands)
         viewController.sendEditingItem = { [weak self] editingItem in
             self?.editingItem = editingItem
             self?.prepareForUpdate()
+        }
+        viewController.sendCustomBrands = { [weak self] customBrands in
+            self?.customBrands = customBrands
         }
         viewController.navigationItem.title = "Edit"
         let nvc = UINavigationController(rootViewController: viewController)

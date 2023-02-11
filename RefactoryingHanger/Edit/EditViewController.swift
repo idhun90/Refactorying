@@ -68,6 +68,8 @@ final class EditViewController: UIViewController {
     var item: Item?
     var editingItem: Item?
     var sendEditingItem: ((_ editingItem:Item) -> Void)?
+    var sendCustomBrands: (([Brand]) -> Void) = { _ in }
+    var customBrands: [Brand]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,13 +88,19 @@ final class EditViewController: UIViewController {
         editingItem = item
     }
     
+    func fetchCustomBrands(with customBrands: [Brand]) {
+        self.customBrands = customBrands
+    }
+    
     private func configureNavigationItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tappedDoneButton))
     }
     
     @objc private func tappedDoneButton() {
         guard let editingItem = editingItem else { return }
+        guard let customBrands = customBrands else { fatalError("커스텀 브랜드 오류") }
         sendEditingItem?(editingItem)
+        sendCustomBrands(customBrands)
         dismiss(animated: true)
     }
     
@@ -307,12 +315,20 @@ extension EditViewController: UICollectionViewDelegate {
             showNextView()
             return false
         case .editBrand(_):
-            let vc = SelectBrandViewController()
+            guard let customBrands = customBrands else { fatalError("customBrands 오류") }
+            guard let editingItem = editingItem else { fatalError("editingItem 오류") }
+            let vc = SelectBrandViewController(customBrands: customBrands)
+            vc.fetchSelectedBrands(name: editingItem.brand)
             //vc.fetchCustomBrands([Brand(name: "테스트")], name: "테스트")
+            //vc.fetchCustomBrands(customBrands)
             vc.onchange = { [weak self] brand in
                 self?.editingItem?.brand = brand
                 self?.prepareForUpdate()
                 print("Brand changed")
+            }
+            vc.onchangeCustomBrands = {[weak self] customBrands in
+                self?.customBrands = customBrands
+                print(self?.customBrands)
             }
             navigationController?.pushViewController(vc, animated: true)
             return false
@@ -327,6 +343,6 @@ extension EditViewController: UICollectionViewDelegate {
     }
     
     private func showNextView() {
-        navigationController?.pushViewController(SelectBrandViewController(), animated: true)
+        //navigationController?.pushViewController(SelectBrandViewController(), animated: true)
     }
 }

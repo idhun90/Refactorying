@@ -17,6 +17,8 @@ final class MainViewController: UIViewController {
     private var snapshot: Snapshot!
     
     var items: [Item] = []
+    var defaultBrand = Brand(name: "None")
+    lazy var customBrands: [Brand] = [defaultBrand]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,12 +144,14 @@ extension MainViewController {
         items.remove(at: index)
     }
     
-    func pushViewController(withID id: Item.ID) {
+    func pushViewController(withID id: Item.ID, withCustomBrands: [Brand]) {
         let item = item(withID: id)
-        let vc = DetailViewController(item: item) { [weak self] item in
+        let vc = DetailViewController(item: item, customBrands: withCustomBrands) { [weak self] item in
             self?.updateItem(item)
             self?.applySnapshot(reloading: [item.id])
-            
+        }
+        vc.brandsOnChange = { [weak self] customBrands in
+            self?.customBrands = customBrands
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -172,7 +176,7 @@ extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         ///indexPath를 활용하지 않고 id 값으로 아이템을 추적한다.
         let id = items[indexPath.item].id
-        pushViewController(withID: id)
+        pushViewController(withID: id, withCustomBrands: customBrands)
         print(id)
     }
 }

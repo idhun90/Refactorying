@@ -22,7 +22,12 @@ extension MainViewController {
             self?.addItem(item)
             self?.applySnapshot()
         }
+        vc.sendCustomBrands = { [weak self] customBrands in
+            self?.customBrands = customBrands
+            print("customBrands changed")
+        }
         vc.fetchItem(with: item)
+        vc.fetchCustomBrands(with: customBrands)
         vc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancelButton(_:)))
         vc.navigationItem.title = NSLocalizedString("Add Item", comment: "Add Item view controller title")
         let nvc = UINavigationController(rootViewController: vc)

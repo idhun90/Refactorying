@@ -34,7 +34,7 @@ final class TextViewContentView: UIView, UIContentView {
     init(_ configuration: UIContentConfiguration) {
         self.configuration = configuration
         super.init(frame: .zero)
-        addCommonSubView(textView, height: 200)
+        addCommonSubView(textView, height: 200, insets: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 20))
         textView.backgroundColor = nil
         textView.font = .preferredFont(forTextStyle: .body)
         textView.delegate = self

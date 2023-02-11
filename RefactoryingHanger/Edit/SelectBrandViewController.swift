@@ -36,9 +36,32 @@ final class SelectBrandViewController: UIViewController {
     }
     
     var defaultBrand = Brand(name: "None")
-    lazy var customBrands: [Brand] = [defaultBrand]
-    lazy var selectedID = defaultBrand.id
+//    lazy var customBrands: [Brand] = [defaultBrand] {
+//        didSet {
+//            onchangeCustomBrands(customBrands)
+//            print("customBrands didSet 작동")
+//        }
+//    }
+    var customBrands: [Brand] {
+        didSet {
+            onchangeCustomBrands(customBrands)
+            print("customBrands didSet 작동")
+        }
+    }
+    //lazy var selectedID = defaultBrand.id
+    var selectedID: Brand.ID?
+    
+    init(customBrands: [Brand]) {
+        self.customBrands = customBrands
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var onchange: ((String) -> Void) = { _ in }
+    var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<listSection, Brand.ID>
     private typealias Snapshot = NSDiffableDataSourceSnapshot<listSection, Brand.ID>
@@ -52,6 +75,8 @@ final class SelectBrandViewController: UIViewController {
         view.layer.cornerRadius = 10
         view.clearButtonMode = .whileEditing
         view.autocapitalizationType = .none
+        view.layer.shadowOpacity = 0.18
+        view.layer.shadowOffset = CGSize.zero
         return view
     }()
     
@@ -62,16 +87,19 @@ final class SelectBrandViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGroupedBackground
-        configureTextField()
         configureCollectionView()
+        configureUI()
         configureDataSource()
         applySnapshot()
         isModalInPresentation = true
     }
-    
-    func fetchCustomBrands(_ Brands: [Brand], name: String) {
-        customBrands = Brands
+    func fetchSelectedBrands(name: String) {
         selectedID = customBrandID(withName: name)
+    }
+    
+    func fetchCustomBrands(_ Brands: [Brand]/*, name: String*/) {
+        customBrands = Brands
+        //selectedID = customBrandID(withName: name)
     }
     
     private func customBrandID(withName name: String) -> Brand.ID {
@@ -84,12 +112,12 @@ final class SelectBrandViewController: UIViewController {
         return customBrands[index]
     }
 
-    private func configureTextField() {
+    private func configureUI() {
         addTextField.delegate = self
         view.addSubview(addTextField)
         
         addTextField.translatesAutoresizingMaskIntoConstraints = false
-        let spacing: CGFloat = 12
+        let spacing: CGFloat = 10
         NSLayoutConstraint.activate([
             addTextField.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor, constant: -spacing),
             addTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: spacing),
@@ -108,7 +136,7 @@ final class SelectBrandViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(greaterThanOrEqualTo: addTextField.topAnchor, constant: -20),
+            collectionView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
@@ -146,7 +174,6 @@ final class SelectBrandViewController: UIViewController {
             cell.contentConfiguration = contentConfiguration
             cell.accessories = itemIdentifier == self.selectedID ? [.checkmark(displayed: .always)] : []
             //cell.accessories = indexPath == self.selectedIndexPath ? [.checkmark(displayed: .always)] : []
-            print(#function)
             
             //❌ cell.accessories = cell.isSelected ? [.checkmark()] : []
             //❌ cell.accessories = self.customBrand(withID: itemIdentifier).isSelected ? [.checkmark(displayed: .always)] : []
@@ -166,8 +193,10 @@ final class SelectBrandViewController: UIViewController {
     private func applySnapshot(reloading ids: [Brand.ID] = []) {
         snapshot = Snapshot()
         snapshot.appendSections([.defaultList, .customList])
-        snapshot.appendItems([defaultBrand.id], toSection: .defaultList)
-        snapshot.appendItems((customBrands.filter { $0.id != defaultBrand.id }.map { $0.id }).reversed(), toSection: .customList) // 새로 추가되는 아이템이 맨 위로 가도록, added item to top cell
+        //snapshot.appendItems([defaultBrand.id], toSection: .defaultList)
+        snapshot.appendItems([customBrandID(withName: "None")], toSection: .defaultList)
+        //snapshot.appendItems((customBrands.filter { $0.id != defaultBrand.id }.map { $0.id }).reversed(), toSection: .customList) // 새로 추가되는 아이템이 맨 위로 가도록, added item to top cell
+        snapshot.appendItems((customBrands.filter { $0.id != customBrandID(withName: "None") }.map { $0.id }).reversed(), toSection: .customList)
         if !ids.isEmpty {
             snapshot.reloadItems(ids)
         }
