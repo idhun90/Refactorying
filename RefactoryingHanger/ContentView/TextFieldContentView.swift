@@ -13,6 +13,7 @@ final class TextFieldContentView: UIView, UIContentView { /// 5. UIConteontView 
     struct Configuration: UIContentConfiguration {
         
         var text: String? = "" ///9. 빈 문자열 프로퍼티 생성, 우리가 사용할 모든 프로퍼티를 이 곳에 설정하면 되는 것 같다.
+        var textColor: UIColor?
         var placeholder: String?
         var keyboardType: UIKeyboardType = .default
         var onChange: (String) -> Void = { _ in }
@@ -74,6 +75,7 @@ final class TextFieldContentView: UIView, UIContentView { /// 5. UIConteontView 
         guard let configuration = configuration as? Configuration else { return } /// 12. TextFieldContentView.Configuration으로 캐스팅해서 프로퍼티 접근 -> 텍스트필드에 연결될 수 있도록 text 프로퍼티가 configuration에 존재해야 한다. (9번)
         /// 13. configuration에서 textField.text 값을 업데이트한다.
         textField.text = configuration.text
+        textField.textColor = configuration.textColor
         textField.placeholder = configuration.placeholder
         textField.keyboardType = configuration.keyboardType
     }

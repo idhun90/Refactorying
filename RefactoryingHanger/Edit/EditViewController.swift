@@ -214,7 +214,8 @@ extension EditViewController {
         var contentConfiguration = cell.textFieldConfiguration()
         contentConfiguration.text = title
         contentConfiguration.placeholder = placeholder
-        contentConfiguration.keyboardType = keyboardType(row: row)
+        contentConfiguration.textColor = configureTextFieldTextColor(row: row)
+        contentConfiguration.keyboardType = configureTextFieldKeyboardType(row: row)
         contentConfiguration.onChange = { [weak self] text in
             switch row {
             case .editName(_):
@@ -231,29 +232,37 @@ extension EditViewController {
     
     func textViewConfiguration(for cell: UICollectionViewListCell, with note: String) -> TextViewContentView.Configuration {
         var contentConfiguration = cell.TextViewConfiguration()
-        contentConfiguration.text = setPlaceholder(with: note)
-        contentConfiguration.textColor = setTextColor(with: note)
+        contentConfiguration.text = configurePlaceholder(with: note)
+        contentConfiguration.textColor = configureTextViewTextColor(with: note)
         contentConfiguration.onchange = { [weak self] note in
             self?.editingItem?.note = note
         }
         return contentConfiguration
     }
     
-    private func setPlaceholder(with note: String) -> String {
+    private func configurePlaceholder(with note: String) -> String {
         if note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return "Note"
         } else {
             return note
         }
     }
-    private func setTextColor(with note: String) -> UIColor? {
+    private func configureTextViewTextColor(with note: String) -> UIColor? {
         if note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || note == "Note" {
             return .placeholderText
         } else {
             return .label
         }
     }
-    private func keyboardType(row: Row) -> UIKeyboardType {
+    private func configureTextFieldTextColor(row: Row) -> UIColor? {
+        switch row {
+        case .editName(_): return .label
+        case .editPrice(_): return .label
+        case .editUrl(_): return .link
+        default: return nil
+        }
+    }
+    private func configureTextFieldKeyboardType(row: Row) -> UIKeyboardType {
         switch row {
         case .editName(_): return .default
         case .editPrice(_): return .decimalPad
