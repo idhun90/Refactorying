@@ -65,11 +65,21 @@ final class EditViewController: UIViewController {
     private var dataSource: DataSource!
     private var snapshot: Snapshot!
     
-    var item: Item?
-    var editingItem: Item?
-    var sendEditingItem: ((_ editingItem:Item) -> Void)?
+    var item: Item
+    var editingItem: Item {
+        didSet {
+            isModalInPresentation = item == editingItem ? false : true
+        }
+    }
+    var sendEditingItem: ((Item) -> Void) = { _ in }
     var sendCustomBrands: (([Brand]) -> Void) = { _ in }
-    var customBrands: [Brand]?
+    var customBrands: [Brand] {
+        didSet {
+            sendCustomBrands(customBrands)
+        }
+    }
+    
+    private var isItemChanged = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,30 +87,30 @@ final class EditViewController: UIViewController {
         configureCollectionView()
         configureDataSource()
         applySnapshot()
+        modalInPresentationToggle()
     }
     
-    deinit {
-        print("deinit EditViewController")
-    }
-    
-    func fetchItem(with item: Item) {
+    init(item: Item, customBrands: [Brand]) {
         self.item = item
-        editingItem = item
-    }
-    
-    func fetchCustomBrands(with customBrands: [Brand]) {
+        self.editingItem = item
         self.customBrands = customBrands
+        super.init(nibName: nil, bundle: nil)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func modalInPresentationToggle() {
+        isModalInPresentation = isItemChanged ? true : false
+    }
+
     private func configureNavigationItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(tappedDoneButton))
     }
     
     @objc private func tappedDoneButton() {
-        guard let editingItem = editingItem else { return }
-        guard let customBrands = customBrands else { fatalError("커스텀 브랜드 오류") }
-        sendEditingItem?(editingItem)
-        sendCustomBrands(customBrands)
+        sendEditingItem(editingItem)
         dismiss(animated: true)
     }
     
@@ -135,16 +145,15 @@ final class EditViewController: UIViewController {
     }
     
     private func applySnapshot() {
-        guard let item = item else { return }
         snapshot = Snapshot()
         snapshot.appendSections([.name, .list, .size, .price, .orderDate, .urlAndNote])
-        snapshot.appendItems([.editName(item.name)], toSection: .name)
-        snapshot.appendItems([.editCategory(item.category), .editBrand(item.brand), .editColor(item.color)], toSection: .list)
-        snapshot.appendItems([.editSize(item.size)], toSection: .size)
+        snapshot.appendItems([.editName(editingItem.name)], toSection: .name)
+        snapshot.appendItems([.editCategory(editingItem.category), .editBrand(editingItem.brand), .editColor(editingItem.color)], toSection: .list)
+        snapshot.appendItems([.editSize(editingItem.size)], toSection: .size)
         //snapshot.appendItems([.editColor(item.color)], toSection: .color)
-        snapshot.appendItems([.editPrice(item.price)], toSection: .price)
-        snapshot.appendItems([.editOrderDate(item.orderDate)], toSection: .orderDate)
-        snapshot.appendItems([.editUrl(item.url), .editNote(item.note)], toSection: .urlAndNote)
+        snapshot.appendItems([.editPrice(editingItem.price)], toSection: .price)
+        snapshot.appendItems([.editOrderDate(editingItem.orderDate)], toSection: .orderDate)
+        snapshot.appendItems([.editUrl(editingItem.url), .editNote(editingItem.note)], toSection: .urlAndNote)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
@@ -166,7 +175,7 @@ extension EditViewController {
             cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .editCategory(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.list, .editBrand(let brand)):
-            cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .editBrand(""))
+            cell.contentConfiguration = editListConfiguration(for: cell, with: customBrands.brandOfName(withName: brand).name, at: .editBrand(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.list, .editColor(let color)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: color, at: .editColor(""))
@@ -211,7 +220,8 @@ extension EditViewController {
         var contentConfiguration = cell.DatePickerContentConfiguration()
         contentConfiguration.date = Date
         contentConfiguration.onchange = { [weak self] date in
-            self?.editingItem?.orderDate = date
+            self?.editingItem.orderDate = date
+            print("EditView - orderDate Changed")
         }
         return contentConfiguration
     }
@@ -227,11 +237,14 @@ extension EditViewController {
         contentConfiguration.onChange = { [weak self] text in
             switch row {
             case .editName(_):
-                self?.editingItem?.name = text
+                self?.editingItem.name = text
+                print("EditView - name Changed")
             case .editPrice(_):
-                self?.editingItem?.price = self?.doubleConvertToString(with: text)
+                self?.editingItem.price = self?.doubleConvertToString(with: text)
+                print("EditView - price Changed")
             case .editUrl(_):
-                self?.editingItem?.url = text
+                self?.editingItem.url = text
+                print("EditView - url Changed")
             default: fatalError("텍스트필드 클로저 문제 발생")
             }
         }
@@ -243,7 +256,8 @@ extension EditViewController {
         contentConfiguration.text = configurePlaceholder(with: note)
         contentConfiguration.textColor = configureTextViewTextColor(with: note)
         contentConfiguration.onchange = { [weak self] note in
-            self?.editingItem?.note = note
+            self?.editingItem.note = note
+            print("EditView - Note Changed")
         }
         return contentConfiguration
     }
@@ -315,20 +329,18 @@ extension EditViewController: UICollectionViewDelegate {
             showNextView()
             return false
         case .editBrand(_):
-            guard let customBrands = customBrands else { fatalError("customBrands 오류") }
-            guard let editingItem = editingItem else { fatalError("editingItem 오류") }
-            let vc = SelectBrandViewController(customBrands: customBrands)
-            vc.fetchSelectedBrands(name: editingItem.brand)
-            //vc.fetchCustomBrands([Brand(name: "테스트")], name: "테스트")
-            //vc.fetchCustomBrands(customBrands)
+            //let vc = SelectBrandViewController(customBrands: customBrands)
+            let vc = SelectBrandViewController(customBrands: customBrands, selectedID: customBrands.brandOfName(withName: editingItem.brand).id)
+            //vc.fetchSelectedBrandID(name: editingItem.brand)
             vc.onchange = { [weak self] brand in
-                self?.editingItem?.brand = brand
-                self?.prepareForUpdate()
-                print("Brand changed")
+                self?.editingItem.brand = brand
+                //self?.prepareForUpdate()
+                self?.applySnapshot()
+                print("EditView - Brand changed")
             }
             vc.onchangeCustomBrands = {[weak self] customBrands in
                 self?.customBrands = customBrands
-                print(self?.customBrands)
+                print("EditView - customBrands Array Changed")
             }
             navigationController?.pushViewController(vc, animated: true)
             return false

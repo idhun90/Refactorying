@@ -51,7 +51,6 @@ enum Row: Hashable {
     
     var item: Item {
         didSet {
-            print("아이템 변화 감지")
             onChange(item)
         }
     }
@@ -59,7 +58,6 @@ enum Row: Hashable {
     var onChange: (Item) -> Void
     var customBrands: [Brand] {
         didSet {
-            print("커스텀 브랜드 변화 감지")
             brandsOnChange(customBrands)
         }
     }
@@ -92,15 +90,15 @@ enum Row: Hashable {
     }
     
     @objc private func tappedEditButton() {
-        let viewController = EditViewController()
-        viewController.fetchItem(with: item)
-        viewController.fetchCustomBrands(with: customBrands)
+        let viewController = EditViewController(item: item, customBrands: customBrands)
         viewController.sendEditingItem = { [weak self] editingItem in
             self?.editingItem = editingItem
             self?.prepareForUpdate()
+            print("DetailView - Item Changed")
         }
         viewController.sendCustomBrands = { [weak self] customBrands in
             self?.customBrands = customBrands
+            print("DetailView - customBrands Array Changed")
         }
         viewController.navigationItem.title = "Edit"
         let nvc = UINavigationController(rootViewController: viewController)
@@ -152,7 +150,6 @@ extension DetailViewController {
     private func prepareForUpdate() {
         if editingItem != item {
             item = editingItem
-            print("item updated")
         }
         snapshot = dataSource.snapshot() // if use snapshot = Snaptshot(), reloadSection, reloadItems will be error And no use reloadItems the UI will not be changed
         //snapshot.reloadItems([Row.name])

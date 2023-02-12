@@ -20,9 +20,10 @@ extension Array where Element == Brand {
         return index
     }
     
-    func NameOfCustomBrand(withName name: String) -> Brand {
+    func brandOfName(withName name: String) -> Brand {
         guard let brand = self.first(where: { $0.name == name } ) else {
-            fatalError("no have maching brand")
+            guard let defaultBrand = self.first(where: { $0.name == "None" } ) else { fatalError("오류 발생")}
+            return defaultBrand
         }
         return brand
     }
@@ -45,14 +46,14 @@ final class SelectBrandViewController: UIViewController {
     var customBrands: [Brand] {
         didSet {
             onchangeCustomBrands(customBrands)
-            print("customBrands didSet 작동")
         }
     }
     //lazy var selectedID = defaultBrand.id
-    var selectedID: Brand.ID?
+    var selectedID: Brand.ID
     
-    init(customBrands: [Brand]) {
+    init(customBrands: [Brand], selectedID: Brand.ID) {
         self.customBrands = customBrands
+        self.selectedID = selectedID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -92,24 +93,6 @@ final class SelectBrandViewController: UIViewController {
         configureDataSource()
         applySnapshot()
         isModalInPresentation = true
-    }
-    func fetchSelectedBrands(name: String) {
-        selectedID = customBrandID(withName: name)
-    }
-    
-    func fetchCustomBrands(_ Brands: [Brand]/*, name: String*/) {
-        customBrands = Brands
-        //selectedID = customBrandID(withName: name)
-    }
-    
-    private func customBrandID(withName name: String) -> Brand.ID {
-        let brand = customBrands.NameOfCustomBrand(withName: name)
-        return brand.id
-    }
-    
-    private func customBrand(withID id: Brand.ID) -> Brand {
-        let index = customBrands.indexOfCustomBrand(withID: id)
-        return customBrands[index]
     }
 
     private func configureUI() {
@@ -292,18 +275,13 @@ extension SelectBrandViewController: UICollectionViewDelegate {
 //            applySnapshot(reloading: [id])
 //        }
 //    }
-    
-    private func updateBrand(_ brand: Brand) {
-        let index = customBrands.indexOfCustomBrand(withID: brand.id)
-        customBrands[index] = brand
-        print("data updated")
-    }
 
 }
 
 extension SelectBrandViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else { return false }
+
         if validationText(with: text) {
             customBrands.append(Brand(name: text.trimmingCharacters(in: .whitespaces))) // 앞뒤 공백만 제거, only remove left, trailing whitespace
             applySnapshot()
@@ -323,7 +301,32 @@ extension SelectBrandViewController: UITextFieldDelegate {
 }
 
 extension SelectBrandViewController {
+    
+    func fetchSelectedBrandID(name: String) {
+        selectedID = customBrandID(withName: name)
+    }
+
+    private func customBrandID(withName name: String) -> Brand.ID {
+        let brand = customBrands.brandOfName(withName: name)
+        return brand.id
+    }
+    
+    private func customBrand(withID id: Brand.ID) -> Brand {
+        let index = customBrands.indexOfCustomBrand(withID: id)
+        return customBrands[index]
+    }
+    
+    private func updateBrand(_ brand: Brand) {
+        let index = customBrands.indexOfCustomBrand(withID: brand.id)
+        customBrands[index] = brand
+        print("data updated")
+    }
+    
     private func deleteBrand(withID id: Brand.ID) {
+        if selectedID == id {
+            selectedID = customBrandID(withName: "None")
+            onchange(customBrand(withID: customBrandID(withName: "None")).name)
+        }
         let index = customBrands.indexOfCustomBrand(withID: id)
         print("deleted: \(customBrands[index].name)")
         customBrands.remove(at: index)

@@ -17,17 +17,16 @@ extension MainViewController {
     @objc func tappedAddButton(_ sender: UIBarButtonItem) {
         print("Add Button Tapped")
         let item = Item(name: "", orderDate: Date.now)
-        let vc = EditViewController()
+        let vc = EditViewController(item: item, customBrands: customBrands)
         vc.sendEditingItem = { [weak self] item in
             self?.addItem(item)
             self?.applySnapshot()
+            print("MainView - Item Changed(Add)")
         }
         vc.sendCustomBrands = { [weak self] customBrands in
             self?.customBrands = customBrands
-            print("customBrands changed")
+            print("MainView - customBrands Array Changed(Add)")
         }
-        vc.fetchItem(with: item)
-        vc.fetchCustomBrands(with: customBrands)
         vc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancelButton(_:)))
         vc.navigationItem.title = NSLocalizedString("Add Item", comment: "Add Item view controller title")
         let nvc = UINavigationController(rootViewController: vc)

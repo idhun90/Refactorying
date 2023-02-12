@@ -17,8 +17,7 @@ final class MainViewController: UIViewController {
     private var snapshot: Snapshot!
     
     var items: [Item] = []
-    var defaultBrand = Brand(name: "None")
-    lazy var customBrands: [Brand] = [defaultBrand]
+    lazy var customBrands: [Brand] = [Brand(name: "None")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +122,6 @@ extension MainViewController {
     private func updateItem(_ item: Item) {
         let index = items.indexOfItem(with: item.id)
         items[index] = item
-        print("changed item value")
     }
     
     func completeItem(withID id: Item.ID) {
@@ -149,9 +147,11 @@ extension MainViewController {
         let vc = DetailViewController(item: item, customBrands: withCustomBrands) { [weak self] item in
             self?.updateItem(item)
             self?.applySnapshot(reloading: [item.id])
+            print("MainView - item Changed(Edit)")
         }
         vc.brandsOnChange = { [weak self] customBrands in
             self?.customBrands = customBrands
+            print("MainView - customBrands Array Changed(Edit)")
         }
         navigationController?.pushViewController(vc, animated: true)
     }
