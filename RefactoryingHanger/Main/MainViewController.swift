@@ -17,6 +17,15 @@ final class MainViewController: UIViewController {
     private var snapshot: Snapshot!
     
     var items: [Item] = []
+    
+    lazy var customCategorys: [Category] = [
+        Category(name: "Outer"),
+        Category(name: "Top"),
+        Category(name: "Bottom"),
+        Category(name: "Shoes"),
+        Category(name: "Acc")
+    ]
+    
     lazy var customBrands: [Brand] = [Brand(name: "None")] {
         didSet {
             // if deleted already selected Brand
@@ -25,6 +34,9 @@ final class MainViewController: UIViewController {
 //            datasource.apply(newSnapshot)
         }
     }
+    
+    lazy var customColors: [Color] = [Color(name: "None")]
+    lazy var customSizes: [Size] = [Size(name: "None")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,16 +162,28 @@ extension MainViewController {
         items.remove(at: index)
     }
     
-    func pushViewController(withID id: Item.ID, withCustomBrands: [Brand]) {
+    func pushViewController(withID id: Item.ID, withCustomCategory: [Category], withCustomBrands: [Brand], withCustomColors: [Color], withCustomSizes: [Size]) {
         let item = item(withID: id)
-        let vc = DetailViewController(item: item, customBrands: withCustomBrands) { [weak self] item in
+        let vc = DetailViewController(item: item, customCategorys: withCustomCategory, customBrands: withCustomBrands, customColors: withCustomColors, customSizes: withCustomSizes) { [weak self] item in
             self?.updateItem(item)
             self?.applySnapshot(reloading: [item.id])
             print("MainView - item Changed(Edit)")
         }
-        vc.brandsOnChange = { [weak self] customBrands in
+        vc.onchangeCustomCategorys = { [weak self] customCategorys in
+            self?.customCategorys = customCategorys
+            print("MainView - customCategorys Array Changed(Edit)")
+        }
+        vc.onchangeCustomBrands = { [weak self] customBrands in
             self?.customBrands = customBrands
             print("MainView - customBrands Array Changed(Edit)")
+        }
+        vc.onchangeCustomColors = { [weak self] customColors in
+            self?.customColors = customColors
+            print("MainView - customColors Array Changed(Edit)")
+        }
+        vc.onchangeCustomSizes = { [weak self] customSizes in
+            self?.customSizes = customSizes
+            print("MainView - customSizes Array Changed(Edit)")
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -184,7 +208,11 @@ extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         ///indexPath를 활용하지 않고 id 값으로 아이템을 추적한다.
         let id = items[indexPath.item].id
-        pushViewController(withID: id, withCustomBrands: customBrands)
+        pushViewController(withID: id,
+                           withCustomCategory: customCategorys,
+                           withCustomBrands: customBrands,
+                           withCustomColors: customColors,
+                           withCustomSizes: customSizes)
         print(id)
     }
 }

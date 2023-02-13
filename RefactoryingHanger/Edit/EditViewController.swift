@@ -72,10 +72,30 @@ final class EditViewController: UIViewController {
         }
     }
     var sendEditingItem: ((Item) -> Void) = { _ in }
+    var sendCustomCategorys: (([Category]) -> Void) = { _ in }
     var sendCustomBrands: (([Brand]) -> Void) = { _ in }
+    var sendCustomColors: (([Color]) -> Void) = { _ in }
+    var sendCustomSizes: (([Size]) -> Void) = { _ in }
+    
+    var customCategorys: [Category] {
+        didSet {
+            sendCustomCategorys(customCategorys)
+        }
+    }
     var customBrands: [Brand] {
         didSet {
             sendCustomBrands(customBrands)
+        }
+    }
+    var customColors: [Color] {
+        didSet {
+            sendCustomColors(customColors)
+        }
+    }
+    
+    var customSizes: [Size] {
+        didSet {
+            sendCustomSizes(customSizes)
         }
     }
     
@@ -90,10 +110,13 @@ final class EditViewController: UIViewController {
         modalInPresentationToggle()
     }
     
-    init(item: Item, customBrands: [Brand]) {
+    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customSizes: [Size]) {
         self.item = item
         self.editingItem = item
+        self.customCategorys = customCategorys
         self.customBrands = customBrands
+        self.customColors = customColors
+        self.customSizes = customSizes
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -324,11 +347,21 @@ extension EditViewController: UICollectionViewDelegate {
         
         switch row {
         case .editCategory(_):
-            print("EditView - Category tapped")
+            let vc = SelectCategoryViewController(customCategorys: customCategorys, selectedID: customCategorys.categoryOfName(withName: editingItem.category).id)
+            vc.onchangeCategory = { [weak self] category in
+                self?.editingItem.category = category
+                self?.applySnapshot()
+                print("EditView - Category changed")
+            }
+            vc.onchangeCustomCategorys = { [weak self] customCategorys in
+                self?.customCategorys = customCategorys
+                print("EditView - customCategorys Array Changed")
+            }
+            navigationController?.pushViewController(vc, animated: true)
             return false
         case .editBrand(_):
             let vc = SelectBrandViewController(customBrands: customBrands, selectedID: customBrands.brandOfName(withName: editingItem.brand).id)
-            vc.onchange = { [weak self] brand in
+            vc.onchangeBrand = { [weak self] brand in
                 self?.editingItem.brand = brand
                 //self?.prepareForUpdate()
                 self?.applySnapshot()
@@ -341,10 +374,30 @@ extension EditViewController: UICollectionViewDelegate {
             navigationController?.pushViewController(vc, animated: true)
             return false
         case .editColor(_):
-            print("EditView - Color tapped")
+            let vc = SelectColorViewController(customColors: customColors, selectedID: customColors.colorOfName(withName: editingItem.color).id)
+            vc.onchangeColor = { [weak self] color in
+                self?.editingItem.color = color
+                self?.applySnapshot()
+                print("EditView - Color changed")
+            }
+            vc.onchangeCustomColors = { [weak self] customColors in
+                self?.customColors = customColors
+                print("EditView - customColors Array Changed")
+            }
+            navigationController?.pushViewController(vc, animated: true)
             return false
         case .editSize(_):
-            print("EditView - Size tapped")
+            let vc = SelectSizeViewController(customSizes: customSizes, selectedID: customSizes.sizeOfName(withName: editingItem.size).id)
+            vc.onchangeSize = { [weak self] size in
+                self?.editingItem.size = size
+                self?.applySnapshot()
+                print("EditView - Size changed")
+            }
+            vc.onchangeCustomSizes = { [weak self] customSizes in
+                self?.customSizes = customSizes
+                print("EditView - customSizes Array Changed")
+            }
+            navigationController?.pushViewController(vc, animated: true)
             return false
         default: return false
         }

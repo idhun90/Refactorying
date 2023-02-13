@@ -43,7 +43,7 @@ final class SelectBrandViewController: UIViewController {
     }
     
     var selectedID: Brand.ID
-    var onchange: ((String) -> Void) = { _ in }
+    var onchangeBrand: ((String) -> Void) = { _ in }
     var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
     
     init(customBrands: [Brand], selectedID: Brand.ID) {
@@ -111,7 +111,7 @@ final class SelectBrandViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
@@ -184,7 +184,7 @@ extension SelectBrandViewController: UICollectionViewDelegate {
         updateSelectedId(collectionView: collectionView, indexPath: indexPath)
         guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
         print("selected:", customBrand(withID: id).name)
-        onchange(customBrand(withID: id).name)
+        onchangeBrand(customBrand(withID: id).name)
 
 //        DispatchQueue.main.async {
 //            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())//no animation
@@ -318,7 +318,7 @@ extension SelectBrandViewController {
         if selectedID == id {
             // if selectedBrand delete -> auto select "None"
             selectedID = customBrandID(withName: "None")
-            onchange(customBrand(withID: customBrandID(withName: "None")).name)
+            onchangeBrand(customBrand(withID: customBrandID(withName: "None")).name)
             
             var newSnapshot = dataSource.snapshot()
             newSnapshot.reconfigureItems(customBrands.map { $0.id })
