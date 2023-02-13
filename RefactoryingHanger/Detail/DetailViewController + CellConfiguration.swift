@@ -12,14 +12,14 @@ import UIKit
 
 extension DetailViewController {
     func listConfiguration(for cell: UICollectionViewListCell, at row: Row) -> UIListContentConfiguration {
-        var contentConfiguration = UIListContentConfiguration.valueCell()
-        contentConfiguration.prefersSideBySideTextAndSecondaryText = true
+        var contentConfiguration = cell.defaultContentConfiguration()
         contentConfiguration.text = text(for: row)
-        contentConfiguration.secondaryText = secondText(for: row)
+        contentConfiguration.textProperties.font = UIFont.preferredFont(forTextStyle: row.textStyle)
+        contentConfiguration.image = row.image
         return contentConfiguration
     }
 /// 특정 row에 대한 name 값 반환
-    func secondText(for row: Row) -> String {
+    func text(for row: Row) -> String {
         switch row {
         case .name: return item.name
         case .category: return item.category
@@ -28,6 +28,8 @@ extension DetailViewController {
         case .color: return item.color
         case .price: return doubleConvertString(with: item.price)
         case .orderDate: return item.orderDate.formatted(date: .numeric, time: .omitted)
+        case .url: return item.url
+        case .note: return item.note
         }
     }
     
@@ -38,17 +40,5 @@ extension DetailViewController {
             return "-"
         }
     }
-    
-    /// 특정 row에 대한 name 값 반환
-    func text(for row: Row) -> String? {
-        switch row {
-        case .name: return Row.name.name
-        case .category: return Row.category.name
-        case .brand: return Row.brand.name
-        case .size: return Row.size.name
-        case .color: return Row.color.name
-        case .price: return Row.price.name
-        case .orderDate: return Row.orderDate.name
-        }
-    }
+
 }

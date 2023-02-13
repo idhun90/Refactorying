@@ -22,22 +22,39 @@ enum Row: Hashable {
     case color
     case price
     case orderDate
+    case url
+    case note
     /// 1~16 TextFieldContentView.swift 확인
     /// 17. AddViewController + CellConfiguration.swift 확인
     /// 18.부터 편집 가능한 textField를 사용자 UI에 구현합니다.
     /// 먼저 편집 가능한 경우 나타나도록 Row에 case를 추가하고, editing snapshot에 항목을 추가합니다.
     /// 그런 다음 1~17에서 정의한 Configuration을 사용하여 편집 제품명 Cell을 구성합니다.
     /// 18.편집 모드에서 사용할 String 연관 값을 가진 case 생성
-
-    var name: String {
+    
+    var imageName: String? {
         switch self {
-        case .name: return "Name"
-        case .category: return "Category"
-        case .brand: return "Brand"
-        case .size: return "Size"
-        case .color: return "Color"
-        case .price: return "Price"
-        case .orderDate: return "OrderDate"
+        case .name: return nil
+        case .category: return "tray.circle"
+        case .brand: return "list.bullet.circle"
+        case .size: return "ruler"
+        case .color: return "paintpalette"
+        case .price: return "wonsign.circle"
+        case .orderDate: return "calendar.circle"
+        case .url: return "link.circle"
+        case .note: return "square.and.pencil"
+        }
+    }
+    
+    var image: UIImage? {
+        guard let imageName = imageName else { return nil }
+        let configuration = UIImage.SymbolConfiguration(textStyle: .headline)
+        return UIImage(systemName: imageName, withConfiguration: configuration)
+    }
+    
+    var textStyle: UIFont.TextStyle {
+        switch self {
+        case .name : return .headline
+        default : return .subheadline
         }
     }
 }
@@ -133,7 +150,8 @@ extension DetailViewController {
     }
     
     private func creatLayout() -> UICollectionViewLayout {
-        let listConfiguraiton = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var listConfiguraiton = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        listConfiguraiton.showsSeparators = false
         return UICollectionViewCompositionalLayout.list(using: listConfiguraiton)
     }
     
@@ -148,7 +166,7 @@ extension DetailViewController {
     private func applySnapshot() {
         snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems([Row.name, Row.category, Row.brand, Row.size, Row.color, Row.price, Row.orderDate])
+        snapshot.appendItems([Row.name, Row.category, Row.brand, Row.size, Row.color, Row.price, Row.orderDate, Row.url, Row.note])
         dataSource.apply(snapshot)
     }
     
