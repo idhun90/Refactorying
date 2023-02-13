@@ -34,14 +34,14 @@ enum Row: Hashable {
     var imageName: String? {
         switch self {
         case .name: return nil
-        case .category: return "tray.circle"
-        case .brand: return "list.bullet.circle"
+        case .category: return "tshirt"
+        case .brand: return "list.bullet"
         case .size: return "ruler"
         case .color: return "paintpalette"
-        case .price: return "wonsign.circle"
-        case .orderDate: return "calendar.circle"
-        case .url: return "link.circle"
-        case .note: return "square.and.pencil"
+        case .price: return "wonsign"
+        case .orderDate: return "calendar"
+        case .url: return "link"
+        case .note: return "note.text"
         }
     }
     
@@ -73,17 +73,38 @@ enum Row: Hashable {
     }
     var editingItem: Item
     var onChange: (Item) -> Void
-    var customBrands: [Brand] {
+    var customCategorys: [Category] {
         didSet {
-            brandsOnChange(customBrands)
+            onchangeCustomCategorys(customCategorys)
         }
     }
-    var brandsOnChange: (([Brand]) -> Void) = { _ in }
+    var customBrands: [Brand] {
+        didSet {
+            onchangeCustomBrands(customBrands)
+        }
+    }
+    var customColors: [Color] {
+        didSet {
+            onchangeCustomColors(customColors)
+        }
+    }
+    var customSizes: [Size] {
+        didSet {
+            onchangeCustomSizes(customSizes)
+        }
+    }
+    var onchangeCustomCategorys: (([Category]) -> Void) = { _ in }
+    var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
+    var onchangeCustomColors: (([Color]) -> Void) = { _ in }
+    var onchangeCustomSizes: (([Size]) -> Void) = { _ in }
     
-    init(item: Item, customBrands: [Brand], onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
+    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customSizes: [Size], onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
         self.item = item
         self.editingItem = item
+        self.customCategorys = customCategorys
         self.customBrands = customBrands
+        self.customColors = customColors
+        self.customSizes = customSizes
         self.onChange = onChange
         super.init(nibName: nil, bundle: nil)
     }
@@ -107,15 +128,27 @@ enum Row: Hashable {
     }
     
     @objc private func tappedEditButton() {
-        let viewController = EditViewController(item: item, customBrands: customBrands)
+        let viewController = EditViewController(item: item, customCategorys: customCategorys, customBrands: customBrands, customColors: customColors, customSizes: customSizes)
         viewController.sendEditingItem = { [weak self] editingItem in
             self?.editingItem = editingItem
             self?.prepareForUpdate()
             print("DetailView - Item Changed")
         }
+        viewController.sendCustomCategorys = { [weak self] customCategorys in
+            self?.customCategorys = customCategorys
+            print("DetailView - customCategorys Array Changed")
+        }
         viewController.sendCustomBrands = { [weak self] customBrands in
             self?.customBrands = customBrands
             print("DetailView - customBrands Array Changed")
+        }
+        viewController.sendCustomColors = { [weak self] customColors in
+            self?.customColors = customColors
+            print("DetailView - customColors Array Changed")
+        }
+        viewController.sendCustomSizes = { [weak self] customSizes in
+            self?.customSizes = customSizes
+            print("DetailView - customSizes Array Changed")
         }
         viewController.navigationItem.title = "Edit"
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancelButton(_:)))
@@ -138,6 +171,7 @@ extension DetailViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemGroupedBackground
         collectionView.delegate = self
+        collectionView.allowsSelection = false
         view.addSubview(collectionView)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false

@@ -28,8 +28,8 @@ extension DetailViewController {
         case .color: return item.color
         case .price: return doubleConvertString(with: item.price)
         case .orderDate: return item.orderDate.formatted(date: .numeric, time: .omitted)
-        case .url: return item.url
-        case .note: return item.note
+        case .url: return item.url.isEmpty ? "-" : item.url
+        case .note: return item.note.isEmpty ? "-" : item.note
         }
     }
     
