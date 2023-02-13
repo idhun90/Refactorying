@@ -101,8 +101,13 @@ enum Row: Hashable {
             print("DetailView - customBrands Array Changed")
         }
         viewController.navigationItem.title = "Edit"
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancelButton(_:)))
         let nvc = UINavigationController(rootViewController: viewController)
         present(nvc, animated: true)
+    }
+    
+    @objc private func tappedCancelButton(_ sender:UIBarButtonItem) {
+        dismiss(animated: true)
     }
 
     @objc private func tappedAddButton(_ sender: UIButton) {

@@ -231,9 +231,13 @@ extension SelectBrandViewController: UICollectionViewDelegate {
         if selectedID == currentSelectedId { return }
         selectedID = currentSelectedId
         
-        DispatchQueue.main.async {
-            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())
-        }
+        var newSnapshot = dataSource.snapshot()
+        newSnapshot.reconfigureItems(customBrands.map { $0.id })
+        dataSource.apply(newSnapshot, animatingDifferences: false)
+
+//        DispatchQueue.main.async { // 실기기 테스트 시 애니메이션 이상함
+//            self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot())
+//        }
 
 //        if self.selectedIndexPath == indexPath { return }
 //        if let previousCell = collectionView.cellForItem(at: selectedIndexPath) as? UICollectionViewListCell {
@@ -315,9 +319,11 @@ extension SelectBrandViewController {
             // if selectedBrand delete -> auto select "None"
             selectedID = customBrandID(withName: "None")
             onchange(customBrand(withID: customBrandID(withName: "None")).name)
-            DispatchQueue.main.async {
-                self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot()) // auto checked "None"
-            }
+            
+            var newSnapshot = dataSource.snapshot()
+            newSnapshot.reconfigureItems(customBrands.map { $0.id })
+            dataSource.apply(newSnapshot, animatingDifferences: false)
+
         }
         let index = customBrands.indexOfCustomBrand(withID: id)
         print("deleted: \(customBrands[index].name)")
