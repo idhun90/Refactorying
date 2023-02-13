@@ -17,7 +17,14 @@ final class MainViewController: UIViewController {
     private var snapshot: Snapshot!
     
     var items: [Item] = []
-    lazy var customBrands: [Brand] = [Brand(name: "None")]
+    lazy var customBrands: [Brand] = [Brand(name: "None")] {
+        didSet {
+            // if deleted already selected Brand
+//            var newSnapshot = datasource.snapshot()
+//            newSnapshot.reconfigureItems(items.map { $0.id })
+//            datasource.apply(newSnapshot)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +33,7 @@ final class MainViewController: UIViewController {
         configureDataSource()
         applySnapshot()
     }
-    
+
 }
 
 extension MainViewController {
@@ -98,6 +105,7 @@ extension MainViewController {
         var content = cell.defaultContentConfiguration()
         content.text = item.name
         content.secondaryText = item.brand + " • " + item.orderDate.formatted(date: .numeric, time: .omitted)
+        //content.secondaryText = customBrands.brandOfName(withName: item.brand).name + " • " + item.orderDate.formatted(date: .numeric, time: .omitted)
         content.secondaryTextProperties.font = .preferredFont(forTextStyle: .caption1)
         cell.contentConfiguration = content
         

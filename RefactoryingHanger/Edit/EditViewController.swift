@@ -17,17 +17,17 @@ final class EditViewController: UIViewController {
         case orderDate
         case urlAndNote
         
-        var headerTitle: String {
-            switch self {
-            case .name: return NSLocalizedString("name", comment: "name section name")
-            case .list: return NSLocalizedString("list", comment: "list section name")
-            case .size: return NSLocalizedString("size", comment: "size section name")
-            //case .color: return NSLocalizedString("color", comment: "color section name")
-            case .price: return NSLocalizedString("price", comment: "price section name")
-            case .orderDate: return NSLocalizedString("orderDate", comment: "orderDate section name")
-            case .urlAndNote: return NSLocalizedString("urlAndNote", comment: "urlAndNote section name")
-            }
-        }
+//        var headerTitle: String {
+//            switch self {
+//            case .name: return NSLocalizedString("name", comment: "name section name")
+//            case .list: return NSLocalizedString("list", comment: "list section name")
+//            case .size: return NSLocalizedString("size", comment: "size section name")
+//            //case .color: return NSLocalizedString("color", comment: "color section name")
+//            case .price: return NSLocalizedString("price", comment: "price section name")
+//            case .orderDate: return NSLocalizedString("orderDate", comment: "orderDate section name")
+//            case .urlAndNote: return NSLocalizedString("urlAndNote", comment: "urlAndNote section name")
+//            }
+//        }
     }
     
     enum Row: Hashable {
@@ -133,7 +133,6 @@ final class EditViewController: UIViewController {
     
     private func createLayout() -> UICollectionViewLayout {
         let listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        //listConfiguration.headerMode = .firstItemInSection
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
     }
     
@@ -175,7 +174,7 @@ extension EditViewController {
             cell.contentConfiguration = editListConfiguration(for: cell, with: category, at: .editCategory(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.list, .editBrand(let brand)):
-            cell.contentConfiguration = editListConfiguration(for: cell, with: customBrands.brandOfName(withName: brand).name, at: .editBrand(""))
+            cell.contentConfiguration = editListConfiguration(for: cell, with: brand, at: .editBrand(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.list, .editColor(let color)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: color, at: .editColor(""))
@@ -304,7 +303,6 @@ extension EditViewController {
 
     func text(for row: Row) -> String? {
         switch row {
-//        case .header(_): return nil
         case .editName(_): return Row.editName("").text
         case .editCategory(_): return Row.editCategory("").text
         case .editBrand(_): return Row.editBrand("").text
@@ -326,12 +324,10 @@ extension EditViewController: UICollectionViewDelegate {
         
         switch row {
         case .editCategory(_):
-            showNextView()
+            print("EditView - Category tapped")
             return false
         case .editBrand(_):
-            //let vc = SelectBrandViewController(customBrands: customBrands)
             let vc = SelectBrandViewController(customBrands: customBrands, selectedID: customBrands.brandOfName(withName: editingItem.brand).id)
-            //vc.fetchSelectedBrandID(name: editingItem.brand)
             vc.onchange = { [weak self] brand in
                 self?.editingItem.brand = brand
                 //self?.prepareForUpdate()
@@ -345,16 +341,12 @@ extension EditViewController: UICollectionViewDelegate {
             navigationController?.pushViewController(vc, animated: true)
             return false
         case .editColor(_):
-            showNextView()
+            print("EditView - Color tapped")
             return false
         case .editSize(_):
-            showNextView()
+            print("EditView - Size tapped")
             return false
         default: return false
         }
-    }
-    
-    private func showNextView() {
-        //navigationController?.pushViewController(SelectBrandViewController(), animated: true)
     }
 }

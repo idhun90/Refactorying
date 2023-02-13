@@ -36,20 +36,15 @@ final class SelectBrandViewController: UIViewController {
         case customList
     }
     
-    var defaultBrand = Brand(name: "None")
-//    lazy var customBrands: [Brand] = [defaultBrand] {
-//        didSet {
-//            onchangeCustomBrands(customBrands)
-//            print("customBrands didSet 작동")
-//        }
-//    }
     var customBrands: [Brand] {
         didSet {
             onchangeCustomBrands(customBrands)
         }
     }
-    //lazy var selectedID = defaultBrand.id
+    
     var selectedID: Brand.ID
+    var onchange: ((String) -> Void) = { _ in }
+    var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
     
     init(customBrands: [Brand], selectedID: Brand.ID) {
         self.customBrands = customBrands
@@ -60,9 +55,6 @@ final class SelectBrandViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    var onchange: ((String) -> Void) = { _ in }
-    var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<listSection, Brand.ID>
     private typealias Snapshot = NSDiffableDataSourceSnapshot<listSection, Brand.ID>
@@ -150,7 +142,7 @@ final class SelectBrandViewController: UIViewController {
             var contentConfiguration = UIListContentConfiguration.valueCell()
 
             switch section {
-            case .defaultList: contentConfiguration.text = self.defaultBrand.name
+            case .defaultList: contentConfiguration.text = self.customBrands.brandOfName(withName: "None").name
             case .customList: contentConfiguration.text = self.customBrand(withID: itemIdentifier).name
             }
             
@@ -301,10 +293,6 @@ extension SelectBrandViewController: UITextFieldDelegate {
 }
 
 extension SelectBrandViewController {
-    
-    func fetchSelectedBrandID(name: String) {
-        selectedID = customBrandID(withName: name)
-    }
 
     private func customBrandID(withName name: String) -> Brand.ID {
         let brand = customBrands.brandOfName(withName: name)
@@ -316,16 +304,20 @@ extension SelectBrandViewController {
         return customBrands[index]
     }
     
-    private func updateBrand(_ brand: Brand) {
-        let index = customBrands.indexOfCustomBrand(withID: brand.id)
-        customBrands[index] = brand
-        print("data updated")
-    }
+//    private func updateBrand(_ brand: Brand) {
+//        let index = customBrands.indexOfCustomBrand(withID: brand.id)
+//        customBrands[index] = brand
+//        print("data updated")
+//    }
     
     private func deleteBrand(withID id: Brand.ID) {
         if selectedID == id {
+            // if selectedBrand delete -> auto select "None"
             selectedID = customBrandID(withName: "None")
             onchange(customBrand(withID: customBrandID(withName: "None")).name)
+            DispatchQueue.main.async {
+                self.dataSource.applySnapshotUsingReloadData(self.dataSource.snapshot()) // auto checked "None"
+            }
         }
         let index = customBrands.indexOfCustomBrand(withID: id)
         print("deleted: \(customBrands[index].name)")
