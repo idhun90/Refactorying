@@ -43,6 +43,11 @@ final class MainViewController: UIViewController {
         Fit(name: "SemiOver"),
         Fit(name: "Over")
     ]
+    lazy var customSatisfactions: [Satisfaction] = [
+        Satisfaction(name: "Small"),
+        Satisfaction(name: "Fit"),
+        Satisfaction(name: "Big")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -168,9 +173,9 @@ extension MainViewController {
         items.remove(at: index)
     }
     
-    func pushViewController(withID id: Item.ID, withCustomCategory: [Category], withCustomBrands: [Brand], withCustomColors: [Color], withCustomFits: [Fit] , withCustomSizes: [Size]) {
+    func pushViewController(withID id: Item.ID, withCustomCategory: [Category], withCustomBrands: [Brand], withCustomColors: [Color], withCustomFits: [Fit] , withCustomSatisfactions: [Satisfaction], withCustomSizes: [Size]) {
         let item = item(withID: id)
-        let vc = DetailViewController(item: item, customCategorys: withCustomCategory, customBrands: withCustomBrands, customColors: withCustomColors, customFits: withCustomFits, customSizes: withCustomSizes) { [weak self] item in
+        let vc = DetailViewController(item: item, customCategorys: withCustomCategory, customBrands: withCustomBrands, customColors: withCustomColors, customFits: withCustomFits, customSatisfactions: withCustomSatisfactions, customSizes: withCustomSizes) { [weak self] item in
             self?.updateItem(item)
             self?.applySnapshot(reloading: [item.id])
             print("MainView - item Changed(Edit)")
@@ -190,6 +195,10 @@ extension MainViewController {
         vc.onchangeCustomFits = { [weak self] customFits in
             self?.customFits = customFits
             print("MainView - customFits Array Changed(Edit)")
+        }
+        vc.onchangeCustomSatisfactions = { [weak self] customSatisfactions in
+            self?.customSatisfactions = customSatisfactions
+            print("MainView - customSatisfactions Array Changed(Edit)")
         }
         vc.onchangeCustomSizes = { [weak self] customSizes in
             self?.customSizes = customSizes
@@ -223,6 +232,7 @@ extension MainViewController: UICollectionViewDelegate {
                            withCustomBrands: customBrands,
                            withCustomColors: customColors,
                            withCustomFits: customFits,
+                           withCustomSatisfactions: customSatisfactions,
                            withCustomSizes: customSizes)
         print(id)
     }

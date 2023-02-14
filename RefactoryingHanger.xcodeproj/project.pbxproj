@@ -27,6 +27,7 @@
 		1471E32D29912A3D004916F4 /* DetailViewController(Backup).swift in Sources */ = {isa = PBXBuildFile; fileRef = 1471E32C29912A3D004916F4 /* DetailViewController(Backup).swift */; };
 		1471E32F29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift in Sources */ = {isa = PBXBuildFile; fileRef = 1471E32E29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift */; };
 		14AF5527299B563600DEF3C8 /* SelectFitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AF5526299B563600DEF3C8 /* SelectFitViewController.swift */; };
+		14AF5529299B641000DEF3C8 /* SelectSatisfactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AF5528299B641000DEF3C8 /* SelectSatisfactionViewController.swift */; };
 		14D9DFD2299A85F000819278 /* SelectCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9DFD1299A85F000819278 /* SelectCategoryViewController.swift */; };
 		14D9DFD4299A860700819278 /* SelectColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9DFD3299A860700819278 /* SelectColorViewController.swift */; };
 		14D9DFD6299A861000819278 /* SelectSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9DFD5299A861000819278 /* SelectSizeViewController.swift */; };
@@ -56,6 +57,7 @@
 		1471E32C29912A3D004916F4 /* DetailViewController(Backup).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController(Backup).swift"; sourceTree = "<group>"; };
 		1471E32E29912C3B004916F4 /* DetailViewController + CellConfiguration(Backup).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController + CellConfiguration(Backup).swift"; sourceTree = "<group>"; };
 		14AF5526299B563600DEF3C8 /* SelectFitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFitViewController.swift; sourceTree = "<group>"; };
+		14AF5528299B641000DEF3C8 /* SelectSatisfactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSatisfactionViewController.swift; sourceTree = "<group>"; };
 		14D9DFD1299A85F000819278 /* SelectCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCategoryViewController.swift; sourceTree = "<group>"; };
 		14D9DFD3299A860700819278 /* SelectColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectColorViewController.swift; sourceTree = "<group>"; };
 		14D9DFD5299A861000819278 /* SelectSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSizeViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				1429F8BA298D8952006428A0 /* SelectBrandViewController.swift */,
 				14D9DFD3299A860700819278 /* SelectColorViewController.swift */,
 				14AF5526299B563600DEF3C8 /* SelectFitViewController.swift */,
+				14AF5528299B641000DEF3C8 /* SelectSatisfactionViewController.swift */,
 				14D9DFD5299A861000819278 /* SelectSizeViewController.swift */,
 				1436FCB4298E688400C07BDF /* EditViewController.swift */,
 			);
@@ -242,6 +245,7 @@
 				14AF5527299B563600DEF3C8 /* SelectFitViewController.swift in Sources */,
 				1429F8B5298CEAC5006428A0 /* TextFieldContentView.swift in Sources */,
 				1429F8B3298CE926006428A0 /* UIView+CommonSubView.swift in Sources */,
+				14AF5529299B641000DEF3C8 /* SelectSatisfactionViewController.swift in Sources */,
 				1436FCB5298E688400C07BDF /* EditViewController.swift in Sources */,
 				1429F896298BB6CA006428A0 /* ViewController.swift in Sources */,
 				14E45DE229974E9A0098798B /* TextViewContentView.swift in Sources */,

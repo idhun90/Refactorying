@@ -39,6 +39,7 @@ final class EditViewController: UIViewController {
         case editSize(String)
         case editColor(String)
         case editFit(String)
+        case editSatisfaction(String)
         case editPrice(Double?)
         case editOrderDate(Date)
         case editUrl(String)
@@ -53,6 +54,7 @@ final class EditViewController: UIViewController {
             case .editSize(_): return "Size"
             case .editColor(_): return "Color"
             case .editFit(_): return "Fit"
+            case .editSatisfaction(_): return "Satisfaction"
             case .editPrice(_): return "Price"
             case .editOrderDate(_): return "OrderDate"
             case .editUrl(_): return "URL"
@@ -80,6 +82,7 @@ final class EditViewController: UIViewController {
     var sendCustomColors: (([Color]) -> Void) = { _ in }
     var sendCustomFits: (([Fit]) -> Void) = { _ in }
     var sendCustomSizes: (([Size]) -> Void) = { _ in }
+    var sendCustomSatisfactions: (([Satisfaction]) -> Void) = { _ in }
     
     var customCategorys: [Category] {
         didSet {
@@ -101,6 +104,11 @@ final class EditViewController: UIViewController {
             sendCustomFits(customFits)
         }
     }
+    var customSatisfactions: [Satisfaction] {
+        didSet {
+            sendCustomSatisfactions(customSatisfactions)
+        }
+    }
     var customSizes: [Size] {
         didSet {
             sendCustomSizes(customSizes)
@@ -118,13 +126,14 @@ final class EditViewController: UIViewController {
         modalInPresentationToggle()
     }
     
-    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customFits: [Fit], customSizes: [Size]) {
+    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customFits: [Fit], customSatisfactions: [Satisfaction], customSizes: [Size]) {
         self.item = item
         self.editingItem = item
         self.customCategorys = customCategorys
         self.customBrands = customBrands
         self.customColors = customColors
         self.customFits = customFits
+        self.customSatisfactions = customSatisfactions
         self.customSizes = customSizes
         super.init(nibName: nil, bundle: nil)
     }
@@ -180,7 +189,7 @@ final class EditViewController: UIViewController {
         snapshot.appendSections([.name, .list, .fitAndSatisfaction, .size, .price, .orderDate, .urlAndNote])
         snapshot.appendItems([.editName(editingItem.name)], toSection: .name)
         snapshot.appendItems([.editCategory(editingItem.category), .editBrand(editingItem.brand), .editColor(editingItem.color)], toSection: .list)
-        snapshot.appendItems([.editFit(editingItem.fit)], toSection: .fitAndSatisfaction)
+        snapshot.appendItems([.editFit(editingItem.fit), .editSatisfaction(editingItem.satisfaction)], toSection: .fitAndSatisfaction)
         snapshot.appendItems([.editSize(editingItem.size)], toSection: .size)
         snapshot.appendItems([.editPrice(editingItem.price)], toSection: .price)
         snapshot.appendItems([.editOrderDate(editingItem.orderDate)], toSection: .orderDate)
@@ -213,6 +222,9 @@ extension EditViewController {
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.fitAndSatisfaction, .editFit(let fit)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: fit, at: .editFit(""))
+            cell.accessories = [.disclosureIndicator(displayed: .always)]
+        case (.fitAndSatisfaction, .editSatisfaction(let satisfaction)):
+            cell.contentConfiguration = editListConfiguration(for: cell, with: satisfaction, at: .editSatisfaction(""))
             cell.accessories = [.disclosureIndicator(displayed: .always)]
         case (.size, .editSize(let size)):
             cell.contentConfiguration = editListConfiguration(for: cell, with: size, at: .editSize(""))
@@ -344,6 +356,7 @@ extension EditViewController {
         case .editSize(_): return Row.editSize("").text
         case .editColor(_): return Row.editColor("").text
         case .editFit(_): return Row.editFit("").text
+        case .editSatisfaction(_): return Row.editSatisfaction("").text
         case .editPrice(_): return Row.editPrice(nil).text
         case .editOrderDate(_): return Row.editOrderDate(Date()).text
         case .editUrl(_): return Row.editUrl("").text
@@ -409,6 +422,19 @@ extension EditViewController: UICollectionViewDelegate {
             vc.onchangeCustomFits = { [weak self] customFits in
                 self?.customFits = customFits
                 print("EditView - customFits Array Changed")
+            }
+            navigationController?.pushViewController(vc, animated: true)
+            return false
+        case .editSatisfaction(_):
+            let vc = SelectSatisfactionViewController(customSatisfactions: customSatisfactions, selectedID: customSatisfactions.satisfactionOfName(withName: editingItem.satisfaction).id)
+            vc.onchangeSatisfaction = { [weak self] satisfaction in
+                self?.editingItem.satisfaction = satisfaction
+                self?.applySnapshot()
+                print("EditView - Satisfaction changed")
+            }
+            vc.onchangeCustomSatisfactions = { [weak self] customSatisfactions in
+                self?.customSatisfactions = customSatisfactions
+                print("EditView - customSatisfactions Array Changed")
             }
             navigationController?.pushViewController(vc, animated: true)
             return false

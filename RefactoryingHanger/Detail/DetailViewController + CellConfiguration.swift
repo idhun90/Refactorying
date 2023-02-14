@@ -26,6 +26,7 @@ extension DetailViewController {
         case .brand: return item.brand
         case .size: return item.size
         case .fit: return item.fit
+        case .satisfaction: return item.satisfaction
         case .color: return item.color
         case .price: return doubleConvertString(with: item.price)
         case .orderDate: return item.orderDate.formatted(date: .numeric, time: .omitted)
