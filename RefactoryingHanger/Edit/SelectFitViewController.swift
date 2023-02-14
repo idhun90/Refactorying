@@ -1,53 +1,53 @@
 //
-//  SelectCategoryViewController.swift
+//  SelectFitViewController.swift
 //  RefactoryingHanger
 //
-//  Created by 도헌 on 2023/02/13.
+//  Created by 도헌 on 2023/02/14.
 //
 
 import UIKit
 
-struct Category: Identifiable, Hashable {
+struct Fit: Identifiable, Hashable {
     var id: String = UUID().uuidString
     var name: String
 }
 
-extension Array where Element == Category {
-    func indexOfCustomCategory(withID id: Category.ID) -> Self.Index {
+extension Array where Element == Fit {
+    func indexOfCustomFit(withID id: Fit.ID) -> Self.Index {
         guard let index = self.firstIndex(where: { $0.id == id } ) else {
-            fatalError("no have maching category")
+            fatalError("no have maching fit")
         }
         return index
     }
     
-    func categoryOfName(withName name: String) -> Category {
+    func fitOfName(withName name: String) -> Fit {
         guard let category = self.first(where: { $0.name == name } ) else {
-            guard let defaultCategory = self.first(where: { $0.name == "Outer" } ) else { fatalError("오류 발생")}
+            guard let defaultCategory = self.first(where: { $0.name == "Regular" } ) else { fatalError("오류 발생")}
             return defaultCategory
         }
         return category
     }
 }
 
-final class SelectCategoryViewController: UIViewController {
+final class SelectFitViewController: UIViewController {
     
     enum listSection: Int {
         case defaultList
         case customList
     }
     
-    var customCategorys: [Category] {
+    var customFits: [Fit] {
         didSet {
-            onchangeCustomCategorys(customCategorys)
+            onchangeCustomFits(customFits)
         }
     }
     
-    var selectedID: Category.ID
-    var onchangeCategory: ((String) -> Void) = { _ in }
-    var onchangeCustomCategorys: (([Category]) -> Void) = { _ in }
+    var selectedID: Fit.ID
+    var onchangeFit: ((String) -> Void) = { _ in }
+    var onchangeCustomFits: (([Fit]) -> Void) = { _ in }
     
-    init(customCategorys: [Category], selectedID: Category.ID) {
-        self.customCategorys = customCategorys
+    init(customFits: [Fit], selectedID: Fit.ID) {
+        self.customFits = customFits
         self.selectedID = selectedID
         super.init(nibName: nil, bundle: nil)
     }
@@ -56,8 +56,8 @@ final class SelectCategoryViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private typealias DataSource = UICollectionViewDiffableDataSource<listSection, Category.ID>
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<listSection, Category.ID>
+    private typealias DataSource = UICollectionViewDiffableDataSource<listSection, Fit.ID>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<listSection, Fit.ID>
     
     let addTextField: UITextField = {
         let view = UITextField()
@@ -128,7 +128,7 @@ final class SelectCategoryViewController: UIViewController {
         guard indexPath.section != 0 else { return nil }
         let deleteActionName = NSLocalizedString("Delete", comment: "Delete action title")
         let deleteAction = UIContextualAction(style: .destructive, title: deleteActionName) { [weak self] _, _, completion in
-            self?.deleteCategory(withID: id)
+            self?.deleteFit(withID: id)
             self?.applySnapshot()
             completion(false)
         }
@@ -136,10 +136,10 @@ final class SelectCategoryViewController: UIViewController {
     }
     
     private func configureDataSource() {
-        let cellRegistraion = UICollectionView.CellRegistration<UICollectionViewListCell, Category.ID> { [weak self] cell, indexPath, itemIdentifier in
+        let cellRegistraion = UICollectionView.CellRegistration<UICollectionViewListCell, Fit.ID> { [weak self] cell, indexPath, itemIdentifier in
             guard let self = self else { return }
             var contentConfiguration = UIListContentConfiguration.valueCell()
-            contentConfiguration.text = self.customCategory(withID: itemIdentifier).name
+            contentConfiguration.text = self.customFit(withID: itemIdentifier).name
             cell.contentConfiguration = contentConfiguration
             cell.accessories = itemIdentifier == self.selectedID ? [.checkmark(displayed: .always)] : []
         }
@@ -149,25 +149,25 @@ final class SelectCategoryViewController: UIViewController {
         })
     }
     
-    private func applySnapshot(reloading ids: [Category.ID] = []) {
+    private func applySnapshot(reloading ids: [Fit.ID] = []) {
         snapshot = Snapshot()
         snapshot.appendSections([.defaultList, .customList])
-        snapshot.appendItems([customCategoryID(withName: "Outer"), customCategoryID(withName: "Top"), customCategoryID(withName: "Bottom"), customCategoryID(withName: "Shoes"), customCategoryID(withName: "Acc")], toSection: .defaultList)
+        snapshot.appendItems([customFitID(withName: "Slim"), customFitID(withName: "Regular"), customFitID(withName: "SemiOver"), customFitID(withName: "Over")], toSection: .defaultList)
 
-        snapshot.appendItems((customCategorys.filter { ($0.id != customCategoryID(withName: "Outer")) && ($0.id != customCategoryID(withName: "Top")) && ($0.id != customCategoryID(withName: "Bottom")) && ($0.id != customCategoryID(withName: "Shoes")) && ($0.id != customCategoryID(withName: "Acc")) }.map { $0.id }).reversed(), toSection: .customList)
+        snapshot.appendItems((customFits.filter { ($0.id != customFitID(withName: "Slim")) && ($0.id != customFitID(withName: "Regular")) && ($0.id != customFitID(withName: "SemiOver")) && ($0.id != customFitID(withName: "Over")) }.map { $0.id }).reversed(), toSection: .customList)
         if !ids.isEmpty {
             snapshot.reloadItems(ids)
         }
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
-extension SelectCategoryViewController: UICollectionViewDelegate {
+extension SelectFitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         updateSelectedId(collectionView: collectionView, indexPath: indexPath)
         guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
-        print("selected:", customCategory(withID: id).name)
-        onchangeCategory(customCategory(withID: id).name)
+        print("selected:", customFit(withID: id).name)
+        onchangeFit(customFit(withID: id).name)
 
     }
     
@@ -177,17 +177,17 @@ extension SelectCategoryViewController: UICollectionViewDelegate {
         selectedID = currentSelectedId
         
         var newSnapshot = dataSource.snapshot()
-        newSnapshot.reconfigureItems(customCategorys.map { $0.id })
+        newSnapshot.reconfigureItems(customFits.map { $0.id })
         dataSource.apply(newSnapshot, animatingDifferences: false)
     }
 }
 
-extension SelectCategoryViewController: UITextFieldDelegate {
+extension SelectFitViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else { return false }
 
         if validationText(with: text) {
-            customCategorys.append(Category(name: text.trimmingCharacters(in: .whitespaces))) // 앞뒤 공백만 제거, only remove left, trailing whitespace
+            customFits.append(Fit(name: text.trimmingCharacters(in: .whitespaces))) // 앞뒤 공백만 제거, only remove left, trailing whitespace
             applySnapshot()
             print("Added:", text)
         }
@@ -198,38 +198,39 @@ extension SelectCategoryViewController: UITextFieldDelegate {
     private func validationText(with text: String) -> Bool {
         let removedWhitespacesText = text.replacingOccurrences(of: " ", with: "") // 중복 검사를 위해 모든 공백 제거 removeAllspaceForTest
         let isEmpty = removedWhitespacesText.isEmpty // 모든 공백 제거 후 빈값인지 체크, checkIsEmpty
-        let isDuplication = customCategorys.contains(where: { $0.name.replacingOccurrences(of: " ", with: "").caseInsensitiveCompare(removedWhitespacesText) == .orderedSame})// 모든 공백 제거한 값끼리 대소문자 구분 없이 같은 값을 가지고 있는지 체크
+        let isDuplication = customFits.contains(where: { $0.name.replacingOccurrences(of: " ", with: "").caseInsensitiveCompare(removedWhitespacesText) == .orderedSame})// 모든 공백 제거한 값끼리 대소문자 구분 없이 같은 값을 가지고 있는지 체크
         return !isEmpty && !isDuplication
         
     }
 }
 
-extension SelectCategoryViewController {
+extension SelectFitViewController {
 
-    private func customCategoryID(withName name: String) -> Category.ID {
-        let category = customCategorys.categoryOfName(withName: name)
-        return category.id
+    private func customFitID(withName name: String) -> Fit.ID {
+        let fit = customFits.fitOfName(withName: name)
+        return fit.id
     }
     
-    private func customCategory(withID id: Category.ID) -> Category {
-        let index = customCategorys.indexOfCustomCategory(withID: id)
-        return customCategorys[index]
+    private func customFit(withID id: Fit.ID) -> Fit {
+        let index = customFits.indexOfCustomFit(withID: id)
+        return customFits[index]
     }
 
-    private func deleteCategory(withID id: Category.ID) {
+    private func deleteFit(withID id: Fit.ID) {
         if selectedID == id {
-            selectedID = customCategoryID(withName: "Outer")
-            onchangeCategory(customCategory(withID: customCategoryID(withName: "Outer")).name)
+            selectedID = customFitID(withName: "Regular")
+            onchangeFit(customFit(withID: customFitID(withName: "Regular")).name)
             
             var newSnapshot = dataSource.snapshot()
-            newSnapshot.reconfigureItems(customCategorys.map { $0.id })
+            newSnapshot.reconfigureItems(customFits.map { $0.id })
             dataSource.apply(newSnapshot, animatingDifferences: false)
 
         }
-        let index = customCategorys.indexOfCustomCategory(withID: id)
-        print("deleted: \(customCategorys[index].name)")
-        customCategorys.remove(at: index)
+        let index = customFits.indexOfCustomFit(withID: id)
+        print("deleted: \(customFits[index].name)")
+        customFits.remove(at: index)
     }
 }
+
 
 

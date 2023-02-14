@@ -17,7 +17,7 @@ extension MainViewController {
     @objc func tappedAddButton(_ sender: UIBarButtonItem) {
         print("Add Button Tapped")
         let item = Item(name: "", orderDate: Date.now)
-        let vc = EditViewController(item: item, customCategorys: customCategorys, customBrands: customBrands, customColors: customColors, customSizes: customSizes)
+        let vc = EditViewController(item: item, customCategorys: customCategorys, customBrands: customBrands, customColors: customColors, customFits: customFits, customSizes: customSizes)
         vc.sendEditingItem = { [weak self] item in
             self?.addItem(item)
             self?.applySnapshot()
@@ -34,6 +34,10 @@ extension MainViewController {
         vc.sendCustomColors = { [weak self] customColors in
             self?.customColors = customColors
             print("MainView - customColors Array Changed(Add)")
+        }
+        vc.sendCustomFits = { [weak self] customFits in
+            self?.customFits = customFits
+            print("MainView - customFits Array Changed(Add)")
         }
         vc.sendCustomSizes = { [weak self] customSizes in
             self?.customSizes = customSizes

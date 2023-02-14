@@ -19,6 +19,7 @@ enum Row: Hashable {
     case category
     case brand
     case size
+    case fit
     case color
     case price
     case orderDate
@@ -34,13 +35,14 @@ enum Row: Hashable {
     var imageName: String? {
         switch self {
         case .name: return nil
-        case .category: return "tshirt"
-        case .brand: return "list.bullet"
+        case .category: return "list.bullet.circle"
+        case .brand: return "b.circle"
         case .size: return "ruler"
+        case .fit: return "square.on.square"
         case .color: return "paintpalette"
-        case .price: return "wonsign"
-        case .orderDate: return "calendar"
-        case .url: return "link"
+        case .price: return "wonsign.circle"
+        case .orderDate: return "calendar.circle"
+        case .url: return "link.circle"
         case .note: return "note.text"
         }
     }
@@ -88,6 +90,11 @@ enum Row: Hashable {
             onchangeCustomColors(customColors)
         }
     }
+    var customFits: [Fit] {
+        didSet {
+            onchangeCustomFits(customFits)
+        }
+    }
     var customSizes: [Size] {
         didSet {
             onchangeCustomSizes(customSizes)
@@ -96,14 +103,16 @@ enum Row: Hashable {
     var onchangeCustomCategorys: (([Category]) -> Void) = { _ in }
     var onchangeCustomBrands: (([Brand]) -> Void) = { _ in }
     var onchangeCustomColors: (([Color]) -> Void) = { _ in }
+    var onchangeCustomFits: (([Fit]) -> Void) = { _ in }
     var onchangeCustomSizes: (([Size]) -> Void) = { _ in }
     
-    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customSizes: [Size], onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
+    init(item: Item, customCategorys: [Category], customBrands: [Brand], customColors: [Color], customFits: [Fit], customSizes: [Size], onChange: @escaping (Item) -> Void) { // 초기화 및 메인화면에서 화면 전환 시 값 전달
         self.item = item
         self.editingItem = item
         self.customCategorys = customCategorys
         self.customBrands = customBrands
         self.customColors = customColors
+        self.customFits = customFits
         self.customSizes = customSizes
         self.onChange = onChange
         super.init(nibName: nil, bundle: nil)
@@ -128,7 +137,7 @@ enum Row: Hashable {
     }
     
     @objc private func tappedEditButton() {
-        let viewController = EditViewController(item: item, customCategorys: customCategorys, customBrands: customBrands, customColors: customColors, customSizes: customSizes)
+        let viewController = EditViewController(item: item, customCategorys: customCategorys, customBrands: customBrands, customColors: customColors, customFits: customFits, customSizes: customSizes)
         viewController.sendEditingItem = { [weak self] editingItem in
             self?.editingItem = editingItem
             self?.prepareForUpdate()
@@ -145,6 +154,10 @@ enum Row: Hashable {
         viewController.sendCustomColors = { [weak self] customColors in
             self?.customColors = customColors
             print("DetailView - customColors Array Changed")
+        }
+        viewController.sendCustomFits = { [weak self] customFits in
+            self?.customFits = customFits
+            print("DetailView - customFits Array Changed")
         }
         viewController.sendCustomSizes = { [weak self] customSizes in
             self?.customSizes = customSizes
@@ -200,7 +213,7 @@ extension DetailViewController {
     private func applySnapshot() {
         snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems([Row.name, Row.category, Row.brand, Row.size, Row.color, Row.price, Row.orderDate, Row.url, Row.note])
+        snapshot.appendItems([Row.name, Row.category, Row.brand, Row.fit, Row.size, Row.color, Row.price, Row.orderDate, Row.url, Row.note])
         dataSource.apply(snapshot)
     }
     

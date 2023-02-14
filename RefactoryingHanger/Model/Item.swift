@@ -15,6 +15,7 @@ struct Item: Equatable, Identifiable {
     var category: String = "Outer"
     var brand: String = "None"
     var size: String = "None" // when choice accessories category, no have size
+    var fit: String = "Regular"
     var color: String = "None"
     var price: Double? = nil
     var orderDate: Date

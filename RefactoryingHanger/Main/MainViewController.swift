@@ -37,6 +37,12 @@ final class MainViewController: UIViewController {
     
     lazy var customColors: [Color] = [Color(name: "None")]
     lazy var customSizes: [Size] = [Size(name: "None")]
+    lazy var customFits: [Fit] = [
+        Fit(name: "Slim"),
+        Fit(name: "Regular"),
+        Fit(name: "SemiOver"),
+        Fit(name: "Over")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +122,7 @@ extension MainViewController {
         ///Cell UI 설정
         var content = cell.defaultContentConfiguration()
         content.text = item.name
-        content.secondaryText = item.brand + " • " + item.orderDate.formatted(date: .numeric, time: .omitted)
+        content.secondaryText = item.brand + " • " + item.category + " • " + item.size
         //content.secondaryText = customBrands.brandOfName(withName: item.brand).name + " • " + item.orderDate.formatted(date: .numeric, time: .omitted)
         content.secondaryTextProperties.font = .preferredFont(forTextStyle: .caption1)
         cell.contentConfiguration = content
@@ -162,9 +168,9 @@ extension MainViewController {
         items.remove(at: index)
     }
     
-    func pushViewController(withID id: Item.ID, withCustomCategory: [Category], withCustomBrands: [Brand], withCustomColors: [Color], withCustomSizes: [Size]) {
+    func pushViewController(withID id: Item.ID, withCustomCategory: [Category], withCustomBrands: [Brand], withCustomColors: [Color], withCustomFits: [Fit] , withCustomSizes: [Size]) {
         let item = item(withID: id)
-        let vc = DetailViewController(item: item, customCategorys: withCustomCategory, customBrands: withCustomBrands, customColors: withCustomColors, customSizes: withCustomSizes) { [weak self] item in
+        let vc = DetailViewController(item: item, customCategorys: withCustomCategory, customBrands: withCustomBrands, customColors: withCustomColors, customFits: withCustomFits, customSizes: withCustomSizes) { [weak self] item in
             self?.updateItem(item)
             self?.applySnapshot(reloading: [item.id])
             print("MainView - item Changed(Edit)")
@@ -180,6 +186,10 @@ extension MainViewController {
         vc.onchangeCustomColors = { [weak self] customColors in
             self?.customColors = customColors
             print("MainView - customColors Array Changed(Edit)")
+        }
+        vc.onchangeCustomFits = { [weak self] customFits in
+            self?.customFits = customFits
+            print("MainView - customFits Array Changed(Edit)")
         }
         vc.onchangeCustomSizes = { [weak self] customSizes in
             self?.customSizes = customSizes
@@ -212,6 +222,7 @@ extension MainViewController: UICollectionViewDelegate {
                            withCustomCategory: customCategorys,
                            withCustomBrands: customBrands,
                            withCustomColors: customColors,
+                           withCustomFits: customFits,
                            withCustomSizes: customSizes)
         print(id)
     }
